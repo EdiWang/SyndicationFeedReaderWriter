@@ -17,7 +17,7 @@ class RssReadFeed
     {
         // Create an XmlReader
         // Example: ..\tests\TestFeeds\rss20-2items.xml
-        using (var xmlReader = XmlReader.Create(filePath, new XmlReaderSettings() { Async = true }))
+        using (var xmlReader = XmlReader.Create(filePath, new XmlReaderSettings { Async = true }))
         {
             // Instantiate an Rss20FeedReader using the XmlReader.
             // This will assign as default an Rss20FeedParser as the parser.

@@ -16,7 +16,7 @@ public class RssReader
     [Fact]
     public async Task ReadSequential()
     {
-        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true }))
+        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings { Async = true }))
         {
             var reader = new RssFeedReader(xmlReader);
 
@@ -31,7 +31,7 @@ public class RssReader
     [Fact]
     public async Task ReadItemAsContent()
     {
-        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true }))
+        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings { Async = true }))
         {
             var reader = new RssFeedReader(xmlReader);
 
@@ -76,7 +76,7 @@ public class RssReader
     [Fact]
     public async Task ReadCategory()
     {
-        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true }))
+        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings { Async = true }))
         {
             var reader = new RssFeedReader(xmlReader);
 
@@ -96,7 +96,7 @@ public class RssReader
     [Fact]
     public async Task ReadItemCategory()
     {
-        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true }))
+        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings { Async = true }))
         {
             var reader = new RssFeedReader(xmlReader);
 
@@ -121,7 +121,7 @@ public class RssReader
     {
         int itemCount = 0;
 
-        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true }))
+        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings { Async = true }))
         {
             var reader = new RssFeedReader(xmlReader);
 
@@ -140,7 +140,7 @@ public class RssReader
     [Fact]
     private async Task ReadWhile()
     {
-        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true }))
+        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings { Async = true }))
         {
             var reader = new RssFeedReader(xmlReader);
 
@@ -175,7 +175,7 @@ public class RssReader
     [Fact]
     private async Task ReadBody()
     {
-        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\RssWithBody.xml", new XmlReaderSettings() { Async = true }))
+        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\RssWithBody.xml", new XmlReaderSettings { Async = true }))
         {
             var reader = new RssFeedReader(xmlReader);
 
@@ -193,7 +193,7 @@ public class RssReader
     [Fact]
     public static async Task ReadFeedElements()
     {
-        var reader = XmlReader.Create(@"..\..\..\TestFeeds\rss20-2items.xml", new XmlReaderSettings() { Async = true });
+        var reader = XmlReader.Create(@"..\..\..\TestFeeds\rss20-2items.xml", new XmlReaderSettings { Async = true });
         await TestReadFeedElements(reader);
     }
 

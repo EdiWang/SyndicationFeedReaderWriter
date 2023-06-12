@@ -22,9 +22,9 @@ class RssWriteItemWithCustomElement
         const string ExampleNs = "http://contoso.com/syndication/feed/examples";
         var sw = new StringWriterWithEncoding(Encoding.UTF8);
 
-        using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings() { Async = true, Indent = true }))
+        using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings { Async = true, Indent = true }))
         {
-            var attributes = new List<SyndicationAttribute>()
+            var attributes = new List<SyndicationAttribute>
             {
                 new SyndicationAttribute("xmlns:example", ExampleNs)
             };
@@ -33,7 +33,7 @@ class RssWriteItemWithCustomElement
             var writer = new RssFeedWriter(xmlWriter, attributes, formatter);
 
             // Create item
-            var item = new SyndicationItem()
+            var item = new SyndicationItem
             {
                 Title = "Rss Writer Available",
                 Description = "The new RSS Writer is now available as a NuGet package!",
@@ -63,16 +63,11 @@ class RssWriteItemWithCustomElement
 
     class StringWriterWithEncoding : StringWriter
     {
-        private readonly Encoding _encoding;
-
         public StringWriterWithEncoding(Encoding encoding)
         {
-            this._encoding = encoding;
+            Encoding = encoding;
         }
 
-        public override Encoding Encoding
-        {
-            get { return _encoding; }
-        }
+        public override Encoding Encoding { get; }
     }
 }

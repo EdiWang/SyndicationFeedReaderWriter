@@ -59,7 +59,7 @@ static class XmlUtils
     public static XmlReader CreateXmlReader(string value)
     {
         return XmlReader.Create(new StringReader(value),
-            new XmlReaderSettings()
+            new XmlReaderSettings
             {
                 ConformanceLevel = ConformanceLevel.Fragment,
                 DtdProcessing = DtdProcessing.Ignore,

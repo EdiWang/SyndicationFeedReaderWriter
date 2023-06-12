@@ -17,17 +17,12 @@ public class RssWriter
 {
     sealed class StringWriterWithEncoding : StringWriter
     {
-        private readonly Encoding _encoding;
-
         public StringWriterWithEncoding(Encoding encoding)
         {
-            this._encoding = encoding;
+            Encoding = encoding;
         }
 
-        public override Encoding Encoding
-        {
-            get { return _encoding; }
-        }
+        public override Encoding Encoding { get; }
     }
 
     [Fact]
@@ -148,7 +143,7 @@ public class RssWriter
 
         // 
         // Construct item
-        var item = new SyndicationItem()
+        var item = new SyndicationItem
         {
             Id = "https://contoso.com/28af09b3-86c7-4dd6-b56f-58aaa17cff62",
             Title = "First item on ItemWriter",
@@ -244,7 +239,7 @@ public class RssWriter
 
         using (var xmlWriter = XmlWriter.Create(sb))
         {
-            var writer = new RssFeedWriter(xmlWriter, null, new RssFormatter() { UseCDATA = true });
+            var writer = new RssFeedWriter(xmlWriter, null, new RssFormatter { UseCDATA = true });
 
             await writer.WriteTitle("<h1>HTML Title</h1>");
             await writer.Flush();
@@ -258,7 +253,7 @@ public class RssWriter
     public async Task Echo()
     {
         string res = null;
-        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20-2items.xml", new XmlReaderSettings() { Async = true }))
+        using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20-2items.xml", new XmlReaderSettings { Async = true }))
         {
             var reader = new RssFeedReader(xmlReader);
 
@@ -307,7 +302,7 @@ public class RssWriter
         string filePath = @"..\..\..\TestFeeds\internetRssFeed.xml";
         string res = null;
 
-        using (var xmlReader = XmlReader.Create(filePath, new XmlReaderSettings() { Async = true }))
+        using (var xmlReader = XmlReader.Create(filePath, new XmlReaderSettings { Async = true }))
         {
             var reader = new RssFeedReader(xmlReader);
 
@@ -510,7 +505,7 @@ public class RssWriter
             var writer = new RssFeedWriter(xmlWriter, attributes, formatter);
 
             // Create item
-            var item = new SyndicationItem()
+            var item = new SyndicationItem
             {
                 Title = "Rss Writer Available",
                 Description = "The new RSS Writer is now open source!",

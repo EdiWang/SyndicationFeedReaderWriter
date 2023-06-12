@@ -19,7 +19,7 @@ class CreateSimpleRssFeed
     {
         var sw = new StringWriterWithEncoding(Encoding.UTF8);
 
-        using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings() { Async = true, Indent = true }))
+        using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings { Async = true, Indent = true }))
         {
             var writer = new RssFeedWriter(xmlWriter);
 
@@ -56,7 +56,7 @@ class CreateSimpleRssFeed
             // Add Items
             for (int i = 0; i < 5; ++i)
             {
-                var item = new SyndicationItem()
+                var item = new SyndicationItem
                 {
                     Id = "https://www.nuget.org/packages/Microsoft.SyndicationFeed.ReaderWriter",
                     Title = $"Item #{i + 1}",
@@ -83,16 +83,11 @@ class CreateSimpleRssFeed
 
     class StringWriterWithEncoding : StringWriter
     {
-        private readonly Encoding _encoding;
-
         public StringWriterWithEncoding(Encoding encoding)
         {
-            this._encoding = encoding;
+            Encoding = encoding;
         }
 
-        public override Encoding Encoding
-        {
-            get { return _encoding; }
-        }
+        public override Encoding Encoding { get; }
     }
 }

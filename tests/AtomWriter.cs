@@ -131,7 +131,7 @@ public class AtomWriter
 
         // 
         // Construct entry
-        var entry = new AtomEntry()
+        var entry = new AtomEntry
         {
             Id = "https://contoso.com/28af09b3",
             Title = "Lorem Ipsum",
@@ -242,7 +242,7 @@ public class AtomWriter
     public async Task EmbededAtomInRssFeed()
     {
         var author = new SyndicationPerson("john doe", "johndoe@contoso.com");
-        var entry = new AtomEntry()
+        var entry = new AtomEntry
         {
             Id = "https://contoso.com/28af09b3",
             Title = "Atom Entry",
@@ -263,7 +263,7 @@ public class AtomWriter
             // Write Rss elements
             await writer.WriteValue(RssElementNames.Title, "Rss Title");
             await writer.Write(author);
-            await writer.Write(new SyndicationItem()
+            await writer.Write(new SyndicationItem
             {
                 Title = "Rss Item",
                 Id = "https://contoso.com/rss/28af09b3",
@@ -330,7 +330,7 @@ public class AtomWriter
 
         using (var xmlWriter = XmlWriter.Create(sw))
         {
-            var writer = new AtomFeedWriter(xmlWriter, null, new AtomFormatter() { UseCDATA = true });
+            var writer = new AtomFeedWriter(xmlWriter, null, new AtomFormatter { UseCDATA = true });
 
             await writer.WriteTitle(title);
             await writer.Flush();
@@ -355,17 +355,12 @@ public class AtomWriter
 
 sealed class StringWriterWithEncoding : StringWriter
 {
-    private readonly Encoding _encoding;
-
     public StringWriterWithEncoding(Encoding encoding)
     {
-        this._encoding = encoding;
+        Encoding = encoding;
     }
 
-    public override Encoding Encoding
-    {
-        get { return _encoding; }
-    }
+    public override Encoding Encoding { get; }
 }
 
 static class DateTimeOffsetExtentions
