@@ -2,16 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.SyndicationFeed.Atom;
 using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.SyndicationFeed;
+using Microsoft.SyndicationFeed.Atom;
 using Xunit;
 
-namespace Microsoft.SyndicationFeed.Tests.Atom
+namespace Edi.SyndicationFeed.ReaderWriter.Tests
 {
     public class AtomWriter
     {
@@ -255,12 +256,12 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
             using (var xmlWriter = XmlWriter.Create(sw))
             {
                 var attributes = new ISyndicationAttribute[] { new SyndicationAttribute("xmlns:atom", "http://www.w3.org/2005/Atom") };
-                var writer = new SyndicationFeed.Rss.RssFeedWriter(xmlWriter, attributes);
+                var writer = new Microsoft.SyndicationFeed.Rss.RssFeedWriter(xmlWriter, attributes);
                 var formatter = new AtomFormatter(attributes, xmlWriter.Settings);
 
                 //
                 // Write Rss elements
-                await writer.WriteValue(SyndicationFeed.Rss.RssElementNames.Title, "Rss Title");
+                await writer.WriteValue(Microsoft.SyndicationFeed.Rss.RssElementNames.Title, "Rss Title");
                 await writer.Write(author);
                 await writer.Write(new SyndicationItem()
                 {

@@ -2,16 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.SyndicationFeed.Rss;
 using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.SyndicationFeed;
+using Microsoft.SyndicationFeed.Rss;
 using Xunit;
 
-namespace Microsoft.SyndicationFeed.Tests.Rss
+namespace Edi.SyndicationFeed.ReaderWriter.Tests
 {
     public class RssWriter
     {
@@ -538,7 +539,7 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
         }
     }
 
-    static class DateTimeOffsetExtentions
+    static class DateTimeOffsetExtentions2
     {
         public static string ToRfc1123(this DateTimeOffset dto)
         {
