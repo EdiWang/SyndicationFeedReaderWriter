@@ -7,8 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.SyndicationFeed;
-using Microsoft.SyndicationFeed.Atom;
+using Edi.SyndicationFeed.ReaderWriter.Atom;
 using Xunit;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Tests

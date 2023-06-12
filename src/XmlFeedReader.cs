@@ -5,8 +5,9 @@
 using System;
 using System.Threading.Tasks;
 using System.Xml;
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 
-namespace Microsoft.SyndicationFeed
+namespace Edi.SyndicationFeed.ReaderWriter
 {
     public abstract class XmlFeedReader : ISyndicationFeedReader
     {

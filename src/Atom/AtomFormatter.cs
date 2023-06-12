@@ -7,8 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 
-namespace Microsoft.SyndicationFeed.Atom
+namespace Edi.SyndicationFeed.ReaderWriter.Atom
 {
     public class AtomFormatter : ISyndicationFeedFormatter
     {

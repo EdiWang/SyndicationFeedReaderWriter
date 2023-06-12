@@ -2,12 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.SyndicationFeed;
-using Microsoft.SyndicationFeed.Rss;
+using Edi.SyndicationFeed;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using Edi.SyndicationFeed.ReaderWriter;
+using Edi.SyndicationFeed.ReaderWriter.Rss;
 
 /// <summary>
 /// Reads RSS items with custom fields

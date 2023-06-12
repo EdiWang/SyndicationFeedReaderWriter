@@ -5,7 +5,7 @@
 using System;
 using System.Xml;
 
-namespace Microsoft.SyndicationFeed
+namespace Edi.SyndicationFeed.ReaderWriter.Utils
 {
     static class XmlExtentions
     {

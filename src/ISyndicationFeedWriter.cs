@@ -4,7 +4,7 @@
 
 using System.Threading.Tasks;
 
-namespace Microsoft.SyndicationFeed
+namespace Edi.SyndicationFeed.ReaderWriter
 {
     public interface ISyndicationFeedWriter
     {

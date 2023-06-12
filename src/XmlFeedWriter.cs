@@ -3,11 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 
-namespace Microsoft.SyndicationFeed
+namespace Edi.SyndicationFeed.ReaderWriter
 {
     public abstract class XmlFeedWriter : ISyndicationFeedWriter
     {

@@ -5,8 +5,9 @@
 using System;
 using System.Threading.Tasks;
 using System.Xml;
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 
-namespace Microsoft.SyndicationFeed.Atom
+namespace Edi.SyndicationFeed.ReaderWriter.Atom
 {
     public class AtomFeedReader : XmlFeedReader
     {

@@ -8,8 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.SyndicationFeed;
-using Microsoft.SyndicationFeed.Rss;
+using Edi.SyndicationFeed.ReaderWriter.Rss;
 using Xunit;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Tests

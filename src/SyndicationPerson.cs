@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Microsoft.SyndicationFeed
+namespace Edi.SyndicationFeed.ReaderWriter
 {
     public sealed class SyndicationPerson : ISyndicationPerson
     {

@@ -4,8 +4,9 @@
 
 using System.Threading.Tasks;
 using System.Xml;
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 
-namespace Microsoft.SyndicationFeed.Rss
+namespace Edi.SyndicationFeed.ReaderWriter.Rss
 {
     public class RssFeedReader : XmlFeedReader
     {

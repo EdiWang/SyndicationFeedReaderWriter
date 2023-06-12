@@ -6,8 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 
-namespace Microsoft.SyndicationFeed.Rss
+namespace Edi.SyndicationFeed.ReaderWriter.Rss
 {
     public class RssFormatter : ISyndicationFeedFormatter
     {

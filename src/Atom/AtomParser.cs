@@ -3,11 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 
-namespace Microsoft.SyndicationFeed.Atom
+namespace Edi.SyndicationFeed.ReaderWriter.Atom
 {
     public class AtomParser : ISyndicationFeedParser
     {

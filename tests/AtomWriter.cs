@@ -8,8 +8,8 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.SyndicationFeed;
-using Microsoft.SyndicationFeed.Atom;
+using Edi.SyndicationFeed.ReaderWriter.Atom;
+using Edi.SyndicationFeed.ReaderWriter.Rss;
 using Xunit;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Tests
@@ -256,12 +256,12 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
             using (var xmlWriter = XmlWriter.Create(sw))
             {
                 var attributes = new ISyndicationAttribute[] { new SyndicationAttribute("xmlns:atom", "http://www.w3.org/2005/Atom") };
-                var writer = new Microsoft.SyndicationFeed.Rss.RssFeedWriter(xmlWriter, attributes);
+                var writer = new RssFeedWriter(xmlWriter, attributes);
                 var formatter = new AtomFormatter(attributes, xmlWriter.Settings);
 
                 //
                 // Write Rss elements
-                await writer.WriteValue(Microsoft.SyndicationFeed.Rss.RssElementNames.Title, "Rss Title");
+                await writer.WriteValue(RssElementNames.Title, "Rss Title");
                 await writer.Write(author);
                 await writer.Write(new SyndicationItem()
                 {

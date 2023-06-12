@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edi.SyndicationFeed.ReaderW
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edi.SyndicationFeed.ReaderWriter.Tests", "tests\Edi.SyndicationFeed.ReaderWriter.Tests.csproj", "{CA320B78-D2F8-4A52-9EC3-F8D2D1F19B4F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.SyndicationFeed.ReaderWriter.Examples", "examples\Microsoft.SyndicationFeed.ReaderWriter.Examples.csproj", "{8ACF4B68-18C3-4835-9E21-812B4E109334}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edi.SyndicationFeed.ReaderWriter.Examples", "examples\Edi.SyndicationFeed.ReaderWriter.Examples.csproj", "{8ACF4B68-18C3-4835-9E21-812B4E109334}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

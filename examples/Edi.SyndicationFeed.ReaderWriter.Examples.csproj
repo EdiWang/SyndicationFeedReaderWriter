@@ -4,7 +4,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Microsoft.SyndicationFeed.ReaderWriter.csproj" />
+    <ProjectReference Include="..\src\Edi.SyndicationFeed.ReaderWriter.csproj" />
   </ItemGroup>
   
   <ItemGroup>
