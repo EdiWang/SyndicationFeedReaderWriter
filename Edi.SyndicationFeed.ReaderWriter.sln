@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.SyndicationFeed.ReaderWriter", "src\Microsoft.SyndicationFeed.ReaderWriter.csproj", "{E8A15170-9B9F-4A6E-9FE8-8C694EB2B123}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edi.SyndicationFeed.ReaderWriter", "src\Edi.SyndicationFeed.ReaderWriter.csproj", "{E8A15170-9B9F-4A6E-9FE8-8C694EB2B123}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edi.SyndicationFeed.ReaderWriter.Tests", "tests\Edi.SyndicationFeed.ReaderWriter.Tests.csproj", "{CA320B78-D2F8-4A52-9EC3-F8D2D1F19B4F}"
 EndProject
