@@ -22,7 +22,7 @@ public abstract class XmlFeedReader : ISyndicationFeedReader
         ElementType = SyndicationElementType.None;
     }
 
-    public ISyndicationFeedParser Parser { get; private set; }
+    public ISyndicationFeedParser Parser { get; }
 
     public SyndicationElementType ElementType { get; private set; }
 

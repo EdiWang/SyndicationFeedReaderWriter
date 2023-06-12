@@ -20,9 +20,9 @@ public sealed class SyndicationPerson : ISyndicationPerson
         RelationshipType = relationshipType;
     }
 
-    public string Email { get; private set; }
+    public string Email { get; }
 
-    public string Name { get; private set; }
+    public string Name { get; }
 
     public string Uri { get; set; }
 

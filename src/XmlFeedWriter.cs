@@ -19,7 +19,7 @@ public abstract class XmlFeedWriter : ISyndicationFeedWriter
         Formatter = formatter ?? throw new ArgumentNullException(nameof(formatter));
     }
 
-    public ISyndicationFeedFormatter Formatter { get; private set; }
+    public ISyndicationFeedFormatter Formatter { get; }
 
     public virtual Task Write(ISyndicationContent content)
     {

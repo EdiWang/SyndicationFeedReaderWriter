@@ -14,7 +14,7 @@ public sealed class SyndicationLink : ISyndicationLink
         RelationshipType = relationshipType;
     }
 
-    public Uri Uri { get; private set; }
+    public Uri Uri { get; }
 
     public string Title { get; set; }
 

@@ -16,7 +16,7 @@ public sealed class SyndicationImage : ISyndicationImage
 
     public string Title { get; set; }
 
-    public Uri Url { get; private set; }
+    public Uri Url { get; }
 
     public ISyndicationLink Link { get; set; }
 

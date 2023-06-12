@@ -50,9 +50,9 @@ public class SyndicationContent : ISyndicationContent
         _children = content.Fields as ICollection<ISyndicationContent> ?? content.Fields.ToList();
     }
 
-    public string Name { get; private set; }
+    public string Name { get; }
 
-    public string Namespace { get; private set; }
+    public string Namespace { get; }
 
     public string Value { get; set; }
 

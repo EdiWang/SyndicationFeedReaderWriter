@@ -20,7 +20,7 @@ public sealed class SyndicationAttribute : ISyndicationAttribute
         Namespace = ns;
     }
 
-    public string Name { get; private set; }
-    public string Namespace { get; private set; }
-    public string Value { get; private set; }
+    public string Name { get; }
+    public string Namespace { get; }
+    public string Value { get; }
 }

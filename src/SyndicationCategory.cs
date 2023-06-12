@@ -13,7 +13,7 @@ public sealed class SyndicationCategory : ISyndicationCategory
         Name = name ?? throw new ArgumentNullException(nameof(name));
     }
 
-    public string Name { get; private set; }
+    public string Name { get; }
 
     public string Label { get; set; }
 
