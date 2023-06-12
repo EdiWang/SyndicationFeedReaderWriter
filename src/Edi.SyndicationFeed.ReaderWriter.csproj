@@ -1,14 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <VersionPrefix>2.0.0</VersionPrefix>
-    <TargetFramework>net6.0</TargetFramework>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-    <PackagingToolsInsufficientSDKVersion>false</PackagingToolsInsufficientSDKVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Globalization" Version="4.3.0" />
-    <PackageReference Include="System.Linq" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />
-    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
-  </ItemGroup>
+    <PropertyGroup>
+        <Version>2.0.0</Version>
+        <TargetFramework>net6.0</TargetFramework>
+        <Authors>Microsoft, Edi Wang</Authors>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/EdiWang/SyndicationFeedReaderWriter</PackageProjectUrl>
+        <PackageTags>SyndicationFeed RSS Atom</PackageTags>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <summary>Edi.SyndicationFeed.ReaderWriter (original Microsoft.SyndicationFeed.ReaderWriter) provides lightweight forward-only read/write APIs to simplify operations with RSS and Atom syndication feeds</summary>
+        <description>Edi.SyndicationFeed.ReaderWriter (original Microsoft.SyndicationFeed.ReaderWriter) provides lightweight forward-only read/write APIs (similar to .NET XmlReader) to simplify operations with RSS and Atom syndication feeds. It offers extensiblity to support custom feed elements and formatting. The workflow is async on demand, which enables this library to be used on syndication feeds of arbitrary size or stream latency.</description>
+        <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+        <PackagingToolsInsufficientSDKVersion>false</PackagingToolsInsufficientSDKVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Globalization" Version="4.3.0" />
+        <PackageReference Include="System.Linq" Version="4.3.0" />
+        <PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />
+        <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
+    </ItemGroup>
 </Project>
