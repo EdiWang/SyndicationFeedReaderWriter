@@ -12,374 +12,373 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xunit;
 
-namespace Edi.SyndicationFeed.ReaderWriter.Tests
+namespace Edi.SyndicationFeed.ReaderWriter.Tests;
+
+public class AtomWriter
 {
-    public class AtomWriter
+    [Fact]
+    public async Task WriteCategory()
     {
-        [Fact]
-        public async Task WriteCategory()
+        var category = new SyndicationCategory("Test Category");
+
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        using (var xmlWriter = XmlWriter.Create(sw))
         {
-            var category = new SyndicationCategory("Test Category");
+            var writer = new AtomFeedWriter(xmlWriter);
 
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
-
-            using (var xmlWriter = XmlWriter.Create(sw))
-            {
-                var writer = new AtomFeedWriter(xmlWriter);
-
-                await writer.Write(category);
-                await writer.Flush();
-            }
-
-            string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<category term=\"{category.Name}\" />"));
+            await writer.Write(category);
+            await writer.Flush();
         }
 
-        [Fact]
-        public async Task WritePerson()
+        string res = sw.ToString();
+        Assert.True(CheckResult(res, $"<category term=\"{category.Name}\" />"));
+    }
+
+    [Fact]
+    public async Task WritePerson()
+    {
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        var p1 = new SyndicationPerson("John Doe", "johndoe@contoso.com");
+        var p2 = new SyndicationPerson("Jane Doe", "janedoe@contoso.com", AtomContributorTypes.Contributor)
         {
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
+            Uri = "www.contoso.com/janedoe"
+        };
 
-            var p1 = new SyndicationPerson("John Doe", "johndoe@contoso.com");
-            var p2 = new SyndicationPerson("Jane Doe", "janedoe@contoso.com", AtomContributorTypes.Contributor)
-            {
-                Uri = "www.contoso.com/janedoe"
-            };
+        using (var xmlWriter = XmlWriter.Create(sw))
+        {
+            var writer = new AtomFeedWriter(xmlWriter);
 
-            using (var xmlWriter = XmlWriter.Create(sw))
-            {
-                var writer = new AtomFeedWriter(xmlWriter);
+            await writer.Write(p1);
+            await writer.Write(p2);
 
-                await writer.Write(p1);
-                await writer.Write(p2);
-
-                await writer.Flush();
-            }
-
-            string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<author><name>{p1.Name}</name><email>{p1.Email}</email></author><contributor><name>{p2.Name}</name><email>{p2.Email}</email><uri>{p2.Uri}</uri></contributor>"));
+            await writer.Flush();
         }
 
-        [Fact]
-        public async Task WriteImage()
+        string res = sw.ToString();
+        Assert.True(CheckResult(res, $"<author><name>{p1.Name}</name><email>{p1.Email}</email></author><contributor><name>{p2.Name}</name><email>{p2.Email}</email><uri>{p2.Uri}</uri></contributor>"));
+    }
+
+    [Fact]
+    public async Task WriteImage()
+    {
+        var icon = new SyndicationImage(new Uri("http://contoso.com/icon.ico"), AtomImageTypes.Icon);
+        var logo = new SyndicationImage(new Uri("http://contoso.com/logo.png"), AtomImageTypes.Logo);
+
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        using (var xmlWriter = XmlWriter.Create(sw))
         {
-            var icon = new SyndicationImage(new Uri("http://contoso.com/icon.ico"), AtomImageTypes.Icon);
-            var logo = new SyndicationImage(new Uri("http://contoso.com/logo.png"), AtomImageTypes.Logo);
+            var writer = new AtomFeedWriter(xmlWriter);
 
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
+            await writer.Write(icon);
+            await writer.Write(logo);
 
-            using (var xmlWriter = XmlWriter.Create(sw))
-            {
-                var writer = new AtomFeedWriter(xmlWriter);
-
-                await writer.Write(icon);
-                await writer.Write(logo);
-
-                await writer.Flush();
-            }
-
-            string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<icon>{icon.Url}</icon><logo>{logo.Url}</logo>"));
+            await writer.Flush();
         }
 
+        string res = sw.ToString();
+        Assert.True(CheckResult(res, $"<icon>{icon.Url}</icon><logo>{logo.Url}</logo>"));
+    }
 
-        [Fact]
-        public async Task WriteLink()
+
+    [Fact]
+    public async Task WriteLink()
+    {
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        var link = new SyndicationLink(new Uri("http://contoso.com"))
         {
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
+            Title = "Test title",
+            Length = 123,
+            MediaType = "mp3/video"
+        };
 
-            var link = new SyndicationLink(new Uri("http://contoso.com"))
-            {
-                Title = "Test title",
-                Length = 123,
-                MediaType = "mp3/video"
-            };
+        using (var xmlWriter = XmlWriter.Create(sw))
+        {
+            var writer = new AtomFeedWriter(xmlWriter);
 
-            using (var xmlWriter = XmlWriter.Create(sw))
-            {
-                var writer = new AtomFeedWriter(xmlWriter);
+            await writer.Write(link);
 
-                await writer.Write(link);
-
-                await writer.Flush();
-            }
-
-            string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<link title=\"{link.Title}\" href=\"{link.Uri}\" type=\"{link.MediaType}\" length=\"{link.Length}\" />"));
+            await writer.Flush();
         }
 
+        string res = sw.ToString();
+        Assert.True(CheckResult(res, $"<link title=\"{link.Title}\" href=\"{link.Uri}\" type=\"{link.MediaType}\" length=\"{link.Length}\" />"));
+    }
 
-        [Fact]
-        public async Task WriteEntry()
+
+    [Fact]
+    public async Task WriteEntry()
+    {
+        var link = new SyndicationLink(new Uri("https://contoso.com/alternate"));
+        var related = new SyndicationLink(new Uri("https://contoso.com/related"), AtomLinkTypes.Related);
+        var self = new SyndicationLink(new Uri("https://contoso.com/28af09b3"), AtomLinkTypes.Self);
+        var enclosure = new SyndicationLink(new Uri("https://contoso.com/podcast"), AtomLinkTypes.Enclosure)
         {
-            var link = new SyndicationLink(new Uri("https://contoso.com/alternate"));
-            var related = new SyndicationLink(new Uri("https://contoso.com/related"), AtomLinkTypes.Related);
-            var self = new SyndicationLink(new Uri("https://contoso.com/28af09b3"), AtomLinkTypes.Self);
-            var enclosure = new SyndicationLink(new Uri("https://contoso.com/podcast"), AtomLinkTypes.Enclosure)
-            {
-                Title = "Podcast",
-                MediaType = "audio/mpeg",
-                Length = 4123
-            };
-            var source = new SyndicationLink(new Uri("https://contoso.com/source"), AtomLinkTypes.Source)
-            {
-                Title = "Blog",
-                LastUpdated = DateTimeOffset.UtcNow.AddDays(-10)
-            };
-            var author = new SyndicationPerson("John Doe", "johndoe@email.com");
-            var category = new SyndicationCategory("Lorem Category");
+            Title = "Podcast",
+            MediaType = "audio/mpeg",
+            Length = 4123
+        };
+        var source = new SyndicationLink(new Uri("https://contoso.com/source"), AtomLinkTypes.Source)
+        {
+            Title = "Blog",
+            LastUpdated = DateTimeOffset.UtcNow.AddDays(-10)
+        };
+        var author = new SyndicationPerson("John Doe", "johndoe@email.com");
+        var category = new SyndicationCategory("Lorem Category");
 
-            // 
-            // Construct entry
-            var entry = new AtomEntry()
-            {
-                Id = "https://contoso.com/28af09b3",
-                Title = "Lorem Ipsum",
-                Description = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit...",
-                LastUpdated = DateTimeOffset.UtcNow,
-                ContentType = "text/html",
-                Summary = "Proin egestas sem in est feugiat, id laoreet massa dignissim",
-                Rights = $"copyright (c) {DateTimeOffset.UtcNow.Year}"
-            };
+        // 
+        // Construct entry
+        var entry = new AtomEntry()
+        {
+            Id = "https://contoso.com/28af09b3",
+            Title = "Lorem Ipsum",
+            Description = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit...",
+            LastUpdated = DateTimeOffset.UtcNow,
+            ContentType = "text/html",
+            Summary = "Proin egestas sem in est feugiat, id laoreet massa dignissim",
+            Rights = $"copyright (c) {DateTimeOffset.UtcNow.Year}"
+        };
 
-            entry.AddLink(link);
-            entry.AddLink(enclosure);
-            entry.AddLink(related);
-            entry.AddLink(source);
-            entry.AddLink(self);
+        entry.AddLink(link);
+        entry.AddLink(enclosure);
+        entry.AddLink(related);
+        entry.AddLink(source);
+        entry.AddLink(self);
 
-            entry.AddContributor(author);
+        entry.AddContributor(author);
 
-            entry.AddCategory(category);
+        entry.AddCategory(category);
+
+        //
+        // Write
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        using (var xmlWriter = XmlWriter.Create(sw))
+        {
+            var writer = new AtomFeedWriter(xmlWriter);
+
+            await writer.Write(entry);
+            await writer.Flush();
+        }
+
+        string res = sw.ToString();
+        Assert.True(CheckResult(res, $"<entry><id>{entry.Id}</id><title>{entry.Title}</title><updated>{entry.LastUpdated.ToRfc3339()}</updated><link href=\"{link.Uri}\" /><link title=\"{enclosure.Title}\" href=\"{enclosure.Uri}\" rel=\"{enclosure.RelationshipType}\" type=\"{enclosure.MediaType}\" length=\"{enclosure.Length}\" /><link href=\"{related.Uri}\" rel=\"{related.RelationshipType}\" /><source><title>{source.Title}</title><link href=\"{source.Uri}\" /><updated>{source.LastUpdated.ToRfc3339()}</updated></source><link href=\"{self.Uri}\" rel=\"{self.RelationshipType}\" /><author><name>{author.Name}</name><email>{author.Email}</email></author><category term=\"{category.Name}\" /><content type=\"{entry.ContentType}\">{entry.Description}</content><summary>{entry.Summary}</summary><rights>{entry.Rights}</rights></entry>"));
+    }
+
+    [Fact]
+    public async Task WriteValue()
+    {
+        const string title = "Example Feed";
+        Guid id = Guid.NewGuid();
+        DateTimeOffset updated = DateTimeOffset.UtcNow.AddDays(-21);
+
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        using (var xmlWriter = XmlWriter.Create(sw))
+        {
+            var writer = new AtomFeedWriter(xmlWriter);
+
+            await writer.WriteTitle(title);
+            await writer.WriteId(id.ToString());
+            await writer.WriteUpdated(updated);
+
+            await writer.Flush();
+        }
+
+        string res = sw.ToString();
+        Assert.True(CheckResult(res, $"<title>{title}</title><id>{id}</id><updated>{updated.ToRfc3339()}</updated>"));
+    }
+
+    [Fact]
+    public async Task WriteContent()
+    {
+        const string uri = "https://contoso.com/generator";
+        const string version = "1.0";
+        const string generator = "Example Toolkit";
+
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        using (var xmlWriter = XmlWriter.Create(sw))
+        {
+            var writer = new AtomFeedWriter(xmlWriter);
+
+            await writer.WriteGenerator(generator, uri, version);
+
+            await writer.Flush();
+        }
+
+        string res = sw.ToString();
+        Assert.True(CheckResult(res, $"<generator uri=\"{uri}\" version=\"{version}\">{generator}</generator>"));
+    }
+
+    [Fact]
+    public async Task WritePrefixedAtomNs()
+    {
+        const string title = "Example Feed";
+        const string uri = "https://contoso.com/generator";
+        const string generator = "Example Toolkit";
+
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        using (var xmlWriter = XmlWriter.Create(sw))
+        {
+            var writer = new AtomFeedWriter(xmlWriter,
+                new ISyndicationAttribute[] { new SyndicationAttribute("xmlns:atom", "http://www.w3.org/2005/Atom") });
+
+            await writer.WriteTitle(title);
+            await writer.WriteGenerator(generator, uri, null);
+
+            await writer.Flush();
+        }
+
+        string res = sw.ToString();
+        Assert.True(CheckResult(res, $"<atom:title>{title}</atom:title><atom:generator uri=\"{uri}\">{generator}</atom:generator>", "atom"));
+    }
+
+    [Fact]
+    public async Task EmbededAtomInRssFeed()
+    {
+        var author = new SyndicationPerson("john doe", "johndoe@contoso.com");
+        var entry = new AtomEntry()
+        {
+            Id = "https://contoso.com/28af09b3",
+            Title = "Atom Entry",
+            Description = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit...",
+            LastUpdated = DateTimeOffset.UtcNow
+        };
+        entry.AddContributor(author);
+
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        using (var xmlWriter = XmlWriter.Create(sw))
+        {
+            var attributes = new ISyndicationAttribute[] { new SyndicationAttribute("xmlns:atom", "http://www.w3.org/2005/Atom") };
+            var writer = new RssFeedWriter(xmlWriter, attributes);
+            var formatter = new AtomFormatter(attributes, xmlWriter.Settings);
 
             //
-            // Write
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
-
-            using (var xmlWriter = XmlWriter.Create(sw))
+            // Write Rss elements
+            await writer.WriteValue(RssElementNames.Title, "Rss Title");
+            await writer.Write(author);
+            await writer.Write(new SyndicationItem()
             {
-                var writer = new AtomFeedWriter(xmlWriter);
-
-                await writer.Write(entry);
-                await writer.Flush();
-            }
-
-            string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<entry><id>{entry.Id}</id><title>{entry.Title}</title><updated>{entry.LastUpdated.ToRfc3339()}</updated><link href=\"{link.Uri}\" /><link title=\"{enclosure.Title}\" href=\"{enclosure.Uri}\" rel=\"{enclosure.RelationshipType}\" type=\"{enclosure.MediaType}\" length=\"{enclosure.Length}\" /><link href=\"{related.Uri}\" rel=\"{related.RelationshipType}\" /><source><title>{source.Title}</title><link href=\"{source.Uri}\" /><updated>{source.LastUpdated.ToRfc3339()}</updated></source><link href=\"{self.Uri}\" rel=\"{self.RelationshipType}\" /><author><name>{author.Name}</name><email>{author.Email}</email></author><category term=\"{category.Name}\" /><content type=\"{entry.ContentType}\">{entry.Description}</content><summary>{entry.Summary}</summary><rights>{entry.Rights}</rights></entry>"));
-        }
-
-        [Fact]
-        public async Task WriteValue()
-        {
-            const string title = "Example Feed";
-            Guid id = Guid.NewGuid();
-            DateTimeOffset updated = DateTimeOffset.UtcNow.AddDays(-21);
-
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
-
-            using (var xmlWriter = XmlWriter.Create(sw))
-            {
-                var writer = new AtomFeedWriter(xmlWriter);
-
-                await writer.WriteTitle(title);
-                await writer.WriteId(id.ToString());
-                await writer.WriteUpdated(updated);
-
-                await writer.Flush();
-            }
-
-            string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<title>{title}</title><id>{id}</id><updated>{updated.ToRfc3339()}</updated>"));
-        }
-
-        [Fact]
-        public async Task WriteContent()
-        {
-            const string uri = "https://contoso.com/generator";
-            const string version = "1.0";
-            const string generator = "Example Toolkit";
-
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
-
-            using (var xmlWriter = XmlWriter.Create(sw))
-            {
-                var writer = new AtomFeedWriter(xmlWriter);
-
-                await writer.WriteGenerator(generator, uri, version);
-
-                await writer.Flush();
-            }
-
-            string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<generator uri=\"{uri}\" version=\"{version}\">{generator}</generator>"));
-        }
-
-        [Fact]
-        public async Task WritePrefixedAtomNs()
-        {
-            const string title = "Example Feed";
-            const string uri = "https://contoso.com/generator";
-            const string generator = "Example Toolkit";
-
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
-
-            using (var xmlWriter = XmlWriter.Create(sw))
-            {
-                var writer = new AtomFeedWriter(xmlWriter,
-                                                new ISyndicationAttribute[] { new SyndicationAttribute("xmlns:atom", "http://www.w3.org/2005/Atom") });
-
-                await writer.WriteTitle(title);
-                await writer.WriteGenerator(generator, uri, null);
-
-                await writer.Flush();
-            }
-
-            string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<atom:title>{title}</atom:title><atom:generator uri=\"{uri}\">{generator}</atom:generator>", "atom"));
-        }
-
-        [Fact]
-        public async Task EmbededAtomInRssFeed()
-        {
-            var author = new SyndicationPerson("john doe", "johndoe@contoso.com");
-            var entry = new AtomEntry()
-            {
-                Id = "https://contoso.com/28af09b3",
-                Title = "Atom Entry",
-                Description = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit...",
+                Title = "Rss Item",
+                Id = "https://contoso.com/rss/28af09b3",
+                Description = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium",
                 LastUpdated = DateTimeOffset.UtcNow
-            };
-            entry.AddContributor(author);
+            });
 
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
+            //
+            // Write atom entry
+            await writer.WriteRaw(formatter.Format(entry));
 
-            using (var xmlWriter = XmlWriter.Create(sw))
-            {
-                var attributes = new ISyndicationAttribute[] { new SyndicationAttribute("xmlns:atom", "http://www.w3.org/2005/Atom") };
-                var writer = new RssFeedWriter(xmlWriter, attributes);
-                var formatter = new AtomFormatter(attributes, xmlWriter.Settings);
-
-                //
-                // Write Rss elements
-                await writer.WriteValue(RssElementNames.Title, "Rss Title");
-                await writer.Write(author);
-                await writer.Write(new SyndicationItem()
-                {
-                    Title = "Rss Item",
-                    Id = "https://contoso.com/rss/28af09b3",
-                    Description = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium",
-                    LastUpdated = DateTimeOffset.UtcNow
-                });
-
-                //
-                // Write atom entry
-                await writer.WriteRaw(formatter.Format(entry));
-
-                await writer.Flush();
-            }
-
-            string res = sw.ToString();
-            Assert.True(res.Contains($"<atom:entry><atom:id>{entry.Id}</atom:id><atom:title>{entry.Title}</atom:title><atom:updated>{entry.LastUpdated.ToRfc3339()}</atom:updated><atom:author><atom:name>{author.Name}</atom:name><atom:email>{author.Email}</atom:email></atom:author><atom:content>{entry.Description}</atom:content></atom:entry>"));
+            await writer.Flush();
         }
 
-        [Fact]
-        public async Task WriteXhtmlTextConstruct()
+        string res = sw.ToString();
+        Assert.True(res.Contains($"<atom:entry><atom:id>{entry.Id}</atom:id><atom:title>{entry.Title}</atom:title><atom:updated>{entry.LastUpdated.ToRfc3339()}</atom:updated><atom:author><atom:name>{author.Name}</atom:name><atom:email>{author.Email}</atom:email></atom:author><atom:content>{entry.Description}</atom:content></atom:entry>"));
+    }
+
+    [Fact]
+    public async Task WriteXhtmlTextConstruct()
+    {
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        string content = "<h1><b href=\"foo\">Heading</b><br foo=\"bar\" /></h1><br />";
+
+        using (var xmlWriter = XmlWriter.Create(sw))
         {
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
+            var writer = new AtomFeedWriter(xmlWriter);
 
-            string content = "<h1><b href=\"foo\">Heading</b><br foo=\"bar\" /></h1><br />";
+            await writer.WriteText("title", content, "xhtml");
 
-            using (var xmlWriter = XmlWriter.Create(sw))
-            {
-                var writer = new AtomFeedWriter(xmlWriter);
-
-                await writer.WriteText("title", content, "xhtml");
-
-                await writer.Flush();
-            }
-
-            string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<title type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">{content}</div></title>"));
+            await writer.Flush();
         }
 
-        [Fact]
-        public async Task WriteXmlContent()
+        string res = sw.ToString();
+        Assert.True(CheckResult(res, $"<title type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">{content}</div></title>"));
+    }
+
+    [Fact]
+    public async Task WriteXmlContent()
+    {
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        string content = "<h1 xmlns=\"boooo\"><b href=\"foo\">Heading</b><br foo=\"bar\" /></h1><br xmlns=\"\" />";
+
+        using (var xmlWriter = XmlWriter.Create(sw))
         {
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
+            var writer = new AtomFeedWriter(xmlWriter);
 
-            string content = "<h1 xmlns=\"boooo\"><b href=\"foo\">Heading</b><br foo=\"bar\" /></h1><br xmlns=\"\" />";
+            await writer.WriteText("content", content, "application/xml");
 
-            using (var xmlWriter = XmlWriter.Create(sw))
-            {
-                var writer = new AtomFeedWriter(xmlWriter);
-
-                await writer.WriteText("content", content, "application/xml");
-
-                await writer.Flush();
-            }
-
-            string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<content type=\"application/xml\">{content}</content>"));
+            await writer.Flush();
         }
 
-        [Fact]
-        public async Task WriteCDATAValue()
+        string res = sw.ToString();
+        Assert.True(CheckResult(res, $"<content type=\"application/xml\">{content}</content>"));
+    }
+
+    [Fact]
+    public async Task WriteCDATAValue()
+    {
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+        string title = "Title & Markup";
+
+        using (var xmlWriter = XmlWriter.Create(sw))
         {
-            var sw = new StringWriterWithEncoding(Encoding.UTF8);
-            string title = "Title & Markup";
+            var writer = new AtomFeedWriter(xmlWriter, null, new AtomFormatter() { UseCDATA = true });
 
-            using (var xmlWriter = XmlWriter.Create(sw))
-            {
-                var writer = new AtomFeedWriter(xmlWriter, null, new AtomFormatter() { UseCDATA = true });
-
-                await writer.WriteTitle(title);
-                await writer.Flush();
-            }
-
-            var res = sw.ToString();
-            Assert.True(CheckResult(res, $"<title><![CDATA[{title}]]></title>"));
+            await writer.WriteTitle(title);
+            await writer.Flush();
         }
 
-
-        private static bool CheckResult(string result, string expected)
-        {
-            return result == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns=\"http://www.w3.org/2005/Atom\">{expected}</feed>";
-        }
-
-        private static bool CheckResult(string result, string expected, string prefix)
-        {
-            return result == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns:{prefix}=\"http://www.w3.org/2005/Atom\">{expected}</feed>";
-        }
+        var res = sw.ToString();
+        Assert.True(CheckResult(res, $"<title><![CDATA[{title}]]></title>"));
     }
 
 
-    sealed class StringWriterWithEncoding : StringWriter
+    private static bool CheckResult(string result, string expected)
     {
-        private readonly Encoding _encoding;
-
-        public StringWriterWithEncoding(Encoding encoding)
-        {
-            this._encoding = encoding;
-        }
-
-        public override Encoding Encoding
-        {
-            get { return _encoding; }
-        }
+        return result == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns=\"http://www.w3.org/2005/Atom\">{expected}</feed>";
     }
 
-    static class DateTimeOffsetExtentions
+    private static bool CheckResult(string result, string expected, string prefix)
     {
-        public static string ToRfc3339(this DateTimeOffset dto)
+        return result == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns:{prefix}=\"http://www.w3.org/2005/Atom\">{expected}</feed>";
+    }
+}
+
+
+sealed class StringWriterWithEncoding : StringWriter
+{
+    private readonly Encoding _encoding;
+
+    public StringWriterWithEncoding(Encoding encoding)
+    {
+        this._encoding = encoding;
+    }
+
+    public override Encoding Encoding
+    {
+        get { return _encoding; }
+    }
+}
+
+static class DateTimeOffsetExtentions
+{
+    public static string ToRfc3339(this DateTimeOffset dto)
+    {
+        if (dto.Offset == TimeSpan.Zero)
         {
-            if (dto.Offset == TimeSpan.Zero)
-            {
-                return dto.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                return dto.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture);
-            }
+            return dto.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            return dto.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture);
         }
     }
 }
