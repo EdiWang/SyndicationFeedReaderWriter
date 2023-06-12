@@ -1,0 +1,29 @@
+name: .NET Build and Pack
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+      working-directory: ./src
+    - name: Run unit tests
+      run: dotnet test --configuration Release
+      working-directory: ./src
+    - name: Generate nuget package
+      run: dotnet pack --configuration Release -o nupkg
+      working-directory: ./src
+    - name: Push nuget package
+      run: dotnet nuget push **\*.nupkg -s 'https://api.nuget.org/v3/index.json' -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
+      working-directory: ./src
