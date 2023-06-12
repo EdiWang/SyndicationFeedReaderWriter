@@ -6,7 +6,6 @@
     <PackagingToolsInsufficientSDKVersion>false</PackagingToolsInsufficientSDKVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MicroBuild.Core" Version="$(MicroBuildVersion)" />
     <PackageReference Include="System.Globalization" Version="4.3.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />
