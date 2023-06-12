@@ -2,12 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Atom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Atom;
 using Xunit;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Tests
@@ -23,7 +23,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
                 var reader = new AtomFeedReader(xmlReader);
                 while (await reader.Read())
                 {
-                    if(reader.ElementType == SyndicationElementType.Person)
+                    if (reader.ElementType == SyndicationElementType.Person)
                     {
                         ISyndicationPerson person = await reader.ReadPerson();
                         persons.Add(person);
@@ -114,7 +114,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
                     if (reader.ElementType == SyndicationElementType.Item)
                     {
                         IAtomEntry item = await reader.ReadEntry();
-                        
+
                         //Assert content of item
                         Assert.True(item.Title == "Atom draft-07 snapshot");
                         Assert.True(item.Links.Count() == 3);
@@ -130,7 +130,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
         [Fact]
         public async Task ReadItemContent()
         {
-            using( XmlReader xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\simpleAtomFeed.xml", new XmlReaderSettings { Async = true }))
+            using (XmlReader xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\simpleAtomFeed.xml", new XmlReaderSettings { Async = true }))
             {
                 var reader = new AtomFeedReader(xmlReader);
 

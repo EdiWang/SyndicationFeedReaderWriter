@@ -2,12 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Utils;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Rss
 {
@@ -139,7 +139,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
                 throw new ArgumentException(nameof(ttl));
             }
 
-            return WriteValue(RssElementNames.TimeToLive, (long) Math.Max(1, Math.Ceiling(ttl.TotalMinutes)));
+            return WriteValue(RssElementNames.TimeToLive, (long)Math.Max(1, Math.Ceiling(ttl.TotalMinutes)));
         }
 
         public virtual Task WriteSkipHours(IEnumerable<byte> hours)

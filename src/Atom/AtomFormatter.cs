@@ -2,12 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Utils;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Atom
 {
@@ -24,8 +24,8 @@ namespace Edi.SyndicationFeed.ReaderWriter.Atom
         public AtomFormatter(IEnumerable<ISyndicationAttribute> knownAttributes, XmlWriterSettings settings)
         {
             _buffer = new StringBuilder();
-            _writer = XmlUtils.CreateXmlWriter(settings?.Clone() ?? new XmlWriterSettings(), 
-                                               EnsureAtomNs(knownAttributes ?? Enumerable.Empty<ISyndicationAttribute>()), 
+            _writer = XmlUtils.CreateXmlWriter(settings?.Clone() ?? new XmlWriterSettings(),
+                                               EnsureAtomNs(knownAttributes ?? Enumerable.Empty<ISyndicationAttribute>()),
                                                _buffer);
         }
 
@@ -56,7 +56,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Atom
         {
             return Format(CreateContent(category));
         }
-        
+
         public string Format(ISyndicationImage image)
         {
             return Format(CreateContent(image));
@@ -223,7 +223,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Atom
                 throw new ArgumentNullException("Url");
             }
 
-            return new SyndicationContent(!string.IsNullOrEmpty(image.RelationshipType) ? image.RelationshipType : AtomImageTypes.Icon, 
+            return new SyndicationContent(!string.IsNullOrEmpty(image.RelationshipType) ? image.RelationshipType : AtomImageTypes.Icon,
                                           FormatValue(image.Url));
         }
 
@@ -542,7 +542,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Atom
         {
             //
             // Insert Atom namespace if it doesn't already exist
-            if (!attributes.Any(a => a.Name.StartsWith("xmlns") && 
+            if (!attributes.Any(a => a.Name.StartsWith("xmlns") &&
                 a.Value == AtomConstants.Atom10Namespace))
             {
                 var list = new List<ISyndicationAttribute>(attributes);

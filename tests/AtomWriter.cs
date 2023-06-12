@@ -2,14 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Atom;
+using Edi.SyndicationFeed.ReaderWriter.Rss;
 using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Atom;
-using Edi.SyndicationFeed.ReaderWriter.Rss;
 using Xunit;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Tests
@@ -225,7 +225,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
 
             using (var xmlWriter = XmlWriter.Create(sw))
             {
-                var writer = new AtomFeedWriter(xmlWriter, 
+                var writer = new AtomFeedWriter(xmlWriter,
                                                 new ISyndicationAttribute[] { new SyndicationAttribute("xmlns:atom", "http://www.w3.org/2005/Atom") });
 
                 await writer.WriteTitle(title);
@@ -362,7 +362,8 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
             this._encoding = encoding;
         }
 
-        public override Encoding Encoding {
+        public override Encoding Encoding
+        {
             get { return _encoding; }
         }
     }

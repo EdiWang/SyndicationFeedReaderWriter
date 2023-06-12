@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 using System.Threading.Tasks;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Utils;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Rss
 {
@@ -13,7 +13,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
         private readonly XmlReader _reader;
         private bool _knownFeed;
 
-        public RssFeedReader(XmlReader reader) 
+        public RssFeedReader(XmlReader reader)
             : this(reader, new RssParser())
         {
         }
@@ -34,7 +34,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
 
             return await base.Read();
         }
-        
+
         protected override SyndicationElementType MapElementType(string elementName)
         {
             if (_reader.NamespaceURI != RssConstants.Rss20Namespace)
@@ -64,7 +64,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
                     return SyndicationElementType.Content;
             }
         }
-        
+
         private async Task InitRead()
         {
             // Check <rss>

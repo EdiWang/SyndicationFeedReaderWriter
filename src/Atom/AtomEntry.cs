@@ -10,7 +10,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Atom
         {
         }
 
-        public AtomEntry(IAtomEntry item) 
+        public AtomEntry(IAtomEntry item)
             : base(item)
         {
             ContentType = item.ContentType;

@@ -2,13 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Rss;
 using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Rss;
 using Xunit;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Tests
@@ -35,7 +35,8 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
         {
             var sw = new StringWriterWithEncoding(Encoding.UTF8);
 
-            var cat1 = new SyndicationCategory("Test Category 1") {
+            var cat1 = new SyndicationCategory("Test Category 1")
+            {
                 Scheme = "http://example.com/test"
             };
 
@@ -60,7 +61,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
             var sw = new StringWriterWithEncoding(Encoding.UTF8);
 
             using (var xmlWriter = XmlWriter.Create(sw))
-            {                
+            {
                 var writer = new RssFeedWriter(xmlWriter);
 
                 await writer.Write(new SyndicationPerson("John Doe", "author@email.com"));
@@ -106,7 +107,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
             using (var xmlWriter = XmlWriter.Create(sw))
             {
                 var writer = new RssFeedWriter(xmlWriter);
-                
+
                 await writer.Write(new SyndicationLink(new Uri("http://testuriforlink.com")));
                 await writer.Flush();
             }
@@ -139,7 +140,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
             Assert.True(res == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><rss version=\"2.0\"><channel><link url=\"{link.Uri}\" type=\"{link.MediaType}\" length=\"{link.Length}\">{link.Title}</link></channel></rss>");
         }
 
-             
+
         [Fact]
         public async Task WriteItem()
         {
@@ -344,9 +345,9 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
                 res = sw.ToString();
             }
 
-            await CompareFeeds(new RssFeedReader(XmlReader.Create(filePath)), 
+            await CompareFeeds(new RssFeedReader(XmlReader.Create(filePath)),
                                new RssFeedReader(XmlReader.Create(new StringReader(res))));
-            
+
         }
 
         private async Task CompareFeeds(ISyndicationFeedReader f1, ISyndicationFeedReader f2)
@@ -383,8 +384,8 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
 
             using (XmlWriter xmlWriter = XmlWriter.Create(sw))
             {
-                var writer = new RssFeedWriter(xmlWriter, 
-                                                 new SyndicationAttribute[] { new SyndicationAttribute("xmlns:content", "http://contoso.com/")});
+                var writer = new RssFeedWriter(xmlWriter,
+                                                 new SyndicationAttribute[] { new SyndicationAttribute("xmlns:content", "http://contoso.com/") });
 
                 await writer.Write(new SyndicationContent("hello", "http://contoso.com/", "world"));
                 await writer.Write(new SyndicationContent("world", "http://contoso.com/", "hello"));

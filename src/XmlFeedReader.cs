@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 using System;
 using System.Threading.Tasks;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Utils;
 
 namespace Edi.SyndicationFeed.ReaderWriter
 {
@@ -13,7 +13,7 @@ namespace Edi.SyndicationFeed.ReaderWriter
     {
         private readonly XmlReader _reader;
         private bool _currentSet;
-        
+
         protected XmlFeedReader(XmlReader reader, ISyndicationFeedParser parser)
         {
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
@@ -30,13 +30,15 @@ namespace Edi.SyndicationFeed.ReaderWriter
 
         public virtual async Task<bool> Read()
         {
-            if (_currentSet) {
+            if (_currentSet)
+            {
                 //
                 // The reader is already advanced, return status
                 _currentSet = false;
                 return !_reader.EOF;
             }
-            else {
+            else
+            {
                 if (ElementType != SyndicationElementType.None)
                 {
                     await Skip();
@@ -100,7 +102,7 @@ namespace Edi.SyndicationFeed.ReaderWriter
             {
                 throw new InvalidOperationException("Unknown Item");
             }
-                
+
             return Parser.ParseItem(await ReadElementAsString());
         }
 
@@ -148,7 +150,7 @@ namespace Edi.SyndicationFeed.ReaderWriter
 
             return Parser.ParseImage(await ReadElementAsString());
         }
-        
+
         public virtual async Task<T> ReadValue<T>()
         {
             ISyndicationContent content = await ReadContent();
@@ -169,7 +171,7 @@ namespace Edi.SyndicationFeed.ReaderWriter
 
             return result;
         }
-        
+
         protected abstract SyndicationElementType MapElementType(string elementName);
 
         private async Task<bool> MoveNext(bool setCurrent = true)

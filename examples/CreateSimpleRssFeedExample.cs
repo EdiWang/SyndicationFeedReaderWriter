@@ -2,14 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Edi.SyndicationFeed;
+using Edi.SyndicationFeed.ReaderWriter;
+using Edi.SyndicationFeed.ReaderWriter.Rss;
 using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter;
-using Edi.SyndicationFeed.ReaderWriter.Rss;
 
 /// <summary>
 /// Create an RSS 2.0 feed
@@ -20,7 +19,7 @@ class CreateSimpleRssFeed
     {
         var sw = new StringWriterWithEncoding(Encoding.UTF8);
 
-        using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings() { Async = true , Indent = true }))
+        using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings() { Async = true, Indent = true }))
         {
             var writer = new RssFeedWriter(xmlWriter);
 
@@ -81,7 +80,7 @@ class CreateSimpleRssFeed
         // Ouput the feed
         Console.WriteLine(sw.ToString());
     }
-    
+
     class StringWriterWithEncoding : StringWriter
     {
         private readonly Encoding _encoding;
@@ -91,7 +90,8 @@ class CreateSimpleRssFeed
             this._encoding = encoding;
         }
 
-        public override Encoding Encoding {
+        public override Encoding Encoding
+        {
             get { return _encoding; }
         }
     }

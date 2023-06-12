@@ -2,15 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Edi.SyndicationFeed;
+using Edi.SyndicationFeed.ReaderWriter;
+using Edi.SyndicationFeed.ReaderWriter.Rss;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter;
-using Edi.SyndicationFeed.ReaderWriter.Rss;
 
 
 /// <summary>
@@ -32,7 +31,7 @@ class RssWriteItemWithCustomElement
 
             var formatter = new RssFormatter(attributes, xmlWriter.Settings);
             var writer = new RssFeedWriter(xmlWriter, attributes, formatter);
-              
+
             // Create item
             var item = new SyndicationItem()
             {
@@ -61,7 +60,7 @@ class RssWriteItemWithCustomElement
 
         Console.WriteLine(sw.ToString());
     }
-    
+
     class StringWriterWithEncoding : StringWriter
     {
         private readonly Encoding _encoding;
@@ -71,7 +70,8 @@ class RssWriteItemWithCustomElement
             this._encoding = encoding;
         }
 
-        public override Encoding Encoding {
+        public override Encoding Encoding
+        {
             get { return _encoding; }
         }
     }

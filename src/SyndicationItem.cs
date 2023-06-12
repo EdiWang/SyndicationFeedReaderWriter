@@ -46,15 +46,15 @@ namespace Edi.SyndicationFeed.ReaderWriter
 
         public string Description { get; set; }
 
-        public IEnumerable<ISyndicationCategory> Categories 
+        public IEnumerable<ISyndicationCategory> Categories
         {
-            get 
+            get
             {
                 return _categories;
             }
         }
 
-        public IEnumerable<ISyndicationPerson> Contributors 
+        public IEnumerable<ISyndicationPerson> Contributors
         {
             get
             {
@@ -62,9 +62,10 @@ namespace Edi.SyndicationFeed.ReaderWriter
             }
         }
 
-        public IEnumerable<ISyndicationLink> Links 
+        public IEnumerable<ISyndicationLink> Links
         {
-            get {
+            get
+            {
                 return _links;
             }
         }

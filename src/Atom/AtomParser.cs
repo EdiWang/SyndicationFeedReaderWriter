@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 using System;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Utils;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Atom
 {
@@ -21,7 +21,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Atom
 
             return CreateCategory(content);
         }
-        
+
         public ISyndicationImage ParseImage(string value)
         {
             ISyndicationContent content = ParseContent(value);
@@ -33,7 +33,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Atom
 
             return CreateImage(content);
         }
-        
+
         public ISyndicationItem ParseItem(string value)
         {
             return ParseEntry(value);
@@ -50,7 +50,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Atom
 
             return CreateEntry(content);
         }
-        
+
         public ISyndicationLink ParseLink(string value)
         {
             ISyndicationContent content = ParseContent(value);
@@ -389,7 +389,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Atom
                     //
                     // Link
                     case AtomElementNames.Link:
-                        if(url == null)
+                        if (url == null)
                         {
                             url = CreateLink(field).Uri;
                         }

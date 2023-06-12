@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 using System;
 using System.Threading.Tasks;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Utils;
 
 namespace Edi.SyndicationFeed.ReaderWriter
 {
@@ -64,7 +64,7 @@ namespace Edi.SyndicationFeed.ReaderWriter
             {
                 throw new FormatException(nameof(value));
             }
-            
+
             return WriteRaw(Formatter.Format(new SyndicationContent(name, valueString)));
         }
 

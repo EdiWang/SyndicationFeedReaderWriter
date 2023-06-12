@@ -46,7 +46,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Utils
             {
                 if (DateTimeUtils.TryParseDate(value, out DateTimeOffset dt))
                 {
-                    result = (T)(object) dt.DateTime;
+                    result = (T)(object)dt.DateTime;
                     return true;
                 }
 

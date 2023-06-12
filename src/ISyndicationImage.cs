@@ -10,7 +10,7 @@ namespace Edi.SyndicationFeed.ReaderWriter
     {
         string Title { get; }
 
-        Uri Url { get;  }
+        Uri Url { get; }
 
         ISyndicationLink Link { get; }
 

@@ -11,7 +11,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Utils
 
         public static bool TryParseDate(string value, out DateTimeOffset result)
         {
-            if(TryParseDateRfc3339(value, out result))
+            if (TryParseDateRfc3339(value, out result))
             {
                 return true;
             }
@@ -245,7 +245,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Utils
                 result = localTime;
                 return true;
             }
-            
+
             DateTimeOffset utcTime;
             if (DateTimeOffset.TryParseExact(dateTimeString, Rfc3339UTCDateTimeFormat,
                 CultureInfo.InvariantCulture.DateTimeFormat,
@@ -254,7 +254,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Utils
                 result = utcTime;
                 return true;
             }
-            
+
             return false;
         }
 
@@ -264,7 +264,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Utils
 
             if (dateTimeString.Length < 20 || dateTimeString.IndexOf('.') < 0)
                 return dateTimeString;
-            
+
             if (dateTimeString[19] == '.')
             {
                 int i = 20;
@@ -272,7 +272,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Utils
                 {
                     ++i;
                 }
-                
+
                 dateTimeString = dateTimeString.Substring(0, 19) + dateTimeString.Substring(i);
             }
 

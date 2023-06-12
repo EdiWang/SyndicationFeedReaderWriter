@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 using System;
 using System.Threading.Tasks;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Utils;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Atom
 {
@@ -16,10 +16,10 @@ namespace Edi.SyndicationFeed.ReaderWriter.Atom
 
         public AtomFeedReader(XmlReader reader)
             : this(reader, new AtomParser())
-        {                
+        {
         }
 
-        public AtomFeedReader(XmlReader reader, ISyndicationFeedParser parser) 
+        public AtomFeedReader(XmlReader reader, ISyndicationFeedParser parser)
             : base(reader, parser)
         {
             _reader = reader;

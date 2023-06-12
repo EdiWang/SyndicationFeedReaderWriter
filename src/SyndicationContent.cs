@@ -56,9 +56,9 @@ namespace Edi.SyndicationFeed.ReaderWriter
 
         public string Value { get; set; }
 
-        public IEnumerable<ISyndicationAttribute> Attributes 
+        public IEnumerable<ISyndicationAttribute> Attributes
         {
-            get 
+            get
             {
                 return _attributes;
             }
@@ -66,7 +66,7 @@ namespace Edi.SyndicationFeed.ReaderWriter
 
         public IEnumerable<ISyndicationContent> Fields
         {
-            get 
+            get
             {
                 return _children;
             }

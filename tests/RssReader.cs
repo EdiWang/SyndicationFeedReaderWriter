@@ -2,11 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Rss;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Rss;
 using Xunit;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Tests
@@ -16,7 +16,8 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
         [Fact]
         public async Task ReadSequential()
         {
-            using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true })) {
+            using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true }))
+            {
                 var reader = new RssFeedReader(xmlReader);
 
                 await reader.Read();
@@ -120,11 +121,14 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
         {
             int itemCount = 0;
 
-            using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true })) {
+            using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true }))
+            {
                 var reader = new RssFeedReader(xmlReader);
 
-                while (await reader.Read()) {
-                    if (reader.ElementType == SyndicationElementType.Item) {
+                while (await reader.Read())
+                {
+                    if (reader.ElementType == SyndicationElementType.Item)
+                    {
                         itemCount++;
                     }
                 }
@@ -178,7 +182,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
                 ISyndicationItem item;
                 while (await reader.Read())
                 {
-                    if(reader.ElementType == SyndicationElementType.Item)
+                    if (reader.ElementType == SyndicationElementType.Item)
                     {
                         item = await reader.ReadItem();
                     }
@@ -192,7 +196,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
             var reader = XmlReader.Create(@"..\..\..\TestFeeds\rss20-2items.xml", new XmlReaderSettings() { Async = true });
             await TestReadFeedElements(reader);
         }
-                
+
         public static async Task TestReadFeedElements(XmlReader outerXmlReader)
         {
             using (var xmlReader = outerXmlReader)
@@ -233,7 +237,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
                                 Assert.True(item.Links.Count() == 3);
                                 Assert.True(item.LastUpdated.ToString() == "12/6/2017 8:25:00 PM +00:00");
                             }
-                            else if(items == 2)
+                            else if (items == 2)
                             {
                                 Assert.True(item.Title == "Lorem ipsum 2017-07-06T20:24:00+00:00");
                                 Assert.True(item.Description == "Do ipsum dolore veniam minim est cillum aliqua ea.");
@@ -259,7 +263,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Tests
             {
                 var reader = new RssFeedReader(xReader);
 
-                while(await reader.Read())
+                while (await reader.Read())
                 {
                     list.Add(await reader.ReadContent());
                 }

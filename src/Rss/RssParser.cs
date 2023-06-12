@@ -2,11 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Edi.SyndicationFeed.ReaderWriter.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Edi.SyndicationFeed.ReaderWriter.Utils;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Rss
 {
@@ -16,12 +16,12 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
         {
             ISyndicationContent content = ParseContent(value);
 
-            if (content.Name != RssElementNames.Category || 
+            if (content.Name != RssElementNames.Category ||
                 content.Namespace != RssConstants.Rss20Namespace)
             {
                 throw new FormatException("Invalid Rss category");
             }
-            
+
             return CreateCategory(content);
         }
 
@@ -29,7 +29,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
         {
             ISyndicationContent content = ParseContent(value);
 
-            if (content.Name != RssElementNames.Item || 
+            if (content.Name != RssElementNames.Item ||
                 content.Namespace != RssConstants.Rss20Namespace)
             {
                 throw new FormatException("Invalid Rss item");
@@ -42,7 +42,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
         {
             ISyndicationContent content = ParseContent(value);
 
-            if (content.Name != RssElementNames.Link || 
+            if (content.Name != RssElementNames.Link ||
                 content.Namespace != RssConstants.Rss20Namespace)
             {
                 throw new FormatException("Invalid Rss link");
@@ -55,7 +55,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
         {
             ISyndicationContent content = ParseContent(value);
 
-            if ((content.Name != RssElementNames.Author && 
+            if ((content.Name != RssElementNames.Author &&
                  content.Name != RssElementNames.ManagingEditor) ||
                 content.Namespace != RssConstants.Rss20Namespace)
             {
@@ -236,7 +236,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
             //
             // Type
             string type = content.Attributes.GetRss("type");
-            
+
             //
             // rel
             string rel = (content.Name == RssElementNames.Link) ? RssLinkTypes.Alternate : content.Name;
@@ -313,7 +313,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
                     case RssElementNames.Title:
                         title = field.Value;
                         break;
-                        
+
                     //
                     // Url
                     case RssElementNames.Url:
@@ -328,7 +328,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
                     case RssElementNames.Link:
                         link = CreateLink(field);
                         break;
-                        
+
                     //
                     // Description
                     case RssElementNames.Description:
@@ -339,7 +339,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
                         break;
                 }
             }
-  
+
             if (url == null)
             {
                 throw new FormatException("Image url not found");
@@ -365,7 +365,8 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
                 throw new FormatException("Invalid Rss category name");
             }
 
-            return new SyndicationCategory(content.Value) {
+            return new SyndicationCategory(content.Value)
+            {
                 Scheme = content.Attributes.GetRss(RssConstants.Domain)
             };
         }
@@ -443,7 +444,7 @@ namespace Edi.SyndicationFeed.ReaderWriter.Rss
     {
         public static string GetRss(this IEnumerable<ISyndicationAttribute> attributes, string name)
         {
-            return attributes.FirstOrDefault(a => a.Name == name && 
+            return attributes.FirstOrDefault(a => a.Name == name &&
                                             (a.Namespace == RssConstants.Rss20Namespace || a.Namespace == null))?.Value;
         }
     }
