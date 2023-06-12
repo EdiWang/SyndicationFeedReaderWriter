@@ -1,8 +1,8 @@
-# Microsoft.SyndicationFeed.ReaderWriter
+# Edi.SyndicationFeed.ReaderWriter
 
 > The original repo https://github.com/dotnet/SyndicationFeedReaderWriter was archived long time ago. I created this repo to continue maintain the project.
 
-Microsoft.SyndicationFeed.ReaderWriter provides lightweight forward-only read/write APIs (similar to .NET XmlReader) to simplify operations with RSS 2.0 ([spec](http://cyber.harvard.edu/rss/rss.html)) and Atom ([spec](https://tools.ietf.org/html/rfc4287)) syndication feeds. It offers extensiblity to support custom feed elements and formatting. The workflow is async on demand, which enables this library to be used on syndication feeds of arbitrary size or stream latency.
+Edi.SyndicationFeed.ReaderWriter (original Microsoft.SyndicationFeed.ReaderWriter) provides lightweight forward-only read/write APIs (similar to .NET XmlReader) to simplify operations with RSS 2.0 ([spec](http://cyber.harvard.edu/rss/rss.html)) and Atom ([spec](https://tools.ietf.org/html/rfc4287)) syndication feeds. It offers extensiblity to support custom feed elements and formatting. The workflow is async on demand, which enables this library to be used on syndication feeds of arbitrary size or stream latency.
 
 ### Requirements:
 * [Visual Studio 2022](https://www.visualstudio.com/vs/whatsnew/)
