@@ -4,20 +4,19 @@
 
 using System;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public interface ISyndicationLink
 {
-    public interface ISyndicationLink
-    {
-        Uri Uri { get; }
+    Uri Uri { get; }
 
-        string Title { get; }
+    string Title { get; }
 
-        string MediaType { get; }
+    string MediaType { get; }
 
-        string RelationshipType { get; }
+    string RelationshipType { get; }
 
-        long Length { get; }
+    long Length { get; }
 
-        DateTimeOffset LastUpdated { get; }
-    }
+    DateTimeOffset LastUpdated { get; }
 }

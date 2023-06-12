@@ -9,205 +9,204 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Edi.SyndicationFeed.ReaderWriter.Rss
+namespace Edi.SyndicationFeed.ReaderWriter.Rss;
+
+public class RssFeedWriter : XmlFeedWriter
 {
-    public class RssFeedWriter : XmlFeedWriter
+    private readonly XmlWriter _writer;
+    private bool _feedStarted;
+    private readonly IEnumerable<ISyndicationAttribute> _attributes;
+
+    public RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> attributes = null)
+        : this(writer, attributes, null)
     {
-        private readonly XmlWriter _writer;
-        private bool _feedStarted;
-        private readonly IEnumerable<ISyndicationAttribute> _attributes;
+    }
 
-        public RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> attributes = null)
-            : this(writer, attributes, null)
+    public RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> attributes, ISyndicationFeedFormatter formatter) :
+        base(writer, formatter ?? new RssFormatter(attributes, writer.Settings))
+    {
+        _writer = writer;
+        _attributes = attributes;
+    }
+
+    public virtual Task WriteTitle(string value)
+    {
+        if (value == null)
         {
+            throw new ArgumentNullException(nameof(value));
         }
 
-        public RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> attributes, ISyndicationFeedFormatter formatter) :
-            base(writer, formatter ?? new RssFormatter(attributes, writer.Settings))
+        return WriteValue(RssElementNames.Title, value);
+    }
+
+    public virtual Task WriteDescription(string value)
+    {
+        if (value == null)
         {
-            _writer = writer;
-            _attributes = attributes;
+            throw new ArgumentNullException(nameof(value));
         }
 
-        public virtual Task WriteTitle(string value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+        return WriteValue(RssElementNames.Description, value);
+    }
 
-            return WriteValue(RssElementNames.Title, value);
+    public virtual Task WriteLanguage(CultureInfo culture)
+    {
+        if (culture == null)
+        {
+            throw new ArgumentNullException(nameof(culture));
         }
 
-        public virtual Task WriteDescription(string value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+        return WriteValue(RssElementNames.Language, culture.Name);
+    }
 
-            return WriteValue(RssElementNames.Description, value);
+    public virtual Task WriteCopyright(string value)
+    {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
         }
 
-        public virtual Task WriteLanguage(CultureInfo culture)
-        {
-            if (culture == null)
-            {
-                throw new ArgumentNullException(nameof(culture));
-            }
+        return WriteValue(RssElementNames.Copyright, value);
+    }
 
-            return WriteValue(RssElementNames.Language, culture.Name);
+    public virtual Task WritePubDate(DateTimeOffset dt)
+    {
+        if (dt == default(DateTimeOffset))
+        {
+            throw new ArgumentException(nameof(dt));
         }
 
-        public virtual Task WriteCopyright(string value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+        return WriteValue(RssElementNames.PubDate, dt);
+    }
 
-            return WriteValue(RssElementNames.Copyright, value);
+    public virtual Task WriteLastBuildDate(DateTimeOffset dt)
+    {
+        if (dt == default(DateTimeOffset))
+        {
+            throw new ArgumentException(nameof(dt));
         }
 
-        public virtual Task WritePubDate(DateTimeOffset dt)
-        {
-            if (dt == default(DateTimeOffset))
-            {
-                throw new ArgumentException(nameof(dt));
-            }
+        return WriteValue(RssElementNames.LastBuildDate, dt);
+    }
 
-            return WriteValue(RssElementNames.PubDate, dt);
+    public virtual Task WriteGenerator(string value)
+    {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
         }
 
-        public virtual Task WriteLastBuildDate(DateTimeOffset dt)
-        {
-            if (dt == default(DateTimeOffset))
-            {
-                throw new ArgumentException(nameof(dt));
-            }
+        return WriteValue(RssElementNames.Generator, value);
+    }
 
-            return WriteValue(RssElementNames.LastBuildDate, dt);
+    public virtual Task WriteDocs()
+    {
+        return WriteValue(RssElementNames.Docs, RssConstants.SpecificationLink);
+    }
+
+    public virtual Task WriteCloud(Uri uri, string registerProcedure, string protocol)
+    {
+        if (uri == null)
+        {
+            throw new ArgumentNullException(nameof(uri));
         }
 
-        public virtual Task WriteGenerator(string value)
+        if (!uri.IsAbsoluteUri)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            return WriteValue(RssElementNames.Generator, value);
+            throw new ArgumentException("Absolute uri required");
         }
 
-        public virtual Task WriteDocs()
+        if (string.IsNullOrEmpty(registerProcedure))
         {
-            return WriteValue(RssElementNames.Docs, RssConstants.SpecificationLink);
+            throw new ArgumentNullException(nameof(registerProcedure));
         }
 
-        public virtual Task WriteCloud(Uri uri, string registerProcedure, string protocol)
+        var cloud = new SyndicationContent(RssElementNames.Cloud);
+
+        cloud.AddAttribute(new SyndicationAttribute("domain", uri.GetComponents(UriComponents.Host, UriFormat.UriEscaped)));
+        cloud.AddAttribute(new SyndicationAttribute("port", uri.GetComponents(UriComponents.StrongPort, UriFormat.UriEscaped)));
+        cloud.AddAttribute(new SyndicationAttribute("path", uri.GetComponents(UriComponents.PathAndQuery, UriFormat.UriEscaped)));
+        cloud.AddAttribute(new SyndicationAttribute("registerProcedure", registerProcedure));
+        cloud.AddAttribute(new SyndicationAttribute("protocol", protocol ?? "xml-rpc"));
+
+        return Write(cloud);
+    }
+
+    public virtual Task WriteTimeToLive(TimeSpan ttl)
+    {
+        if (ttl == default(TimeSpan))
         {
-            if (uri == null)
-            {
-                throw new ArgumentNullException(nameof(uri));
-            }
-
-            if (!uri.IsAbsoluteUri)
-            {
-                throw new ArgumentException("Absolute uri required");
-            }
-
-            if (string.IsNullOrEmpty(registerProcedure))
-            {
-                throw new ArgumentNullException(nameof(registerProcedure));
-            }
-
-            var cloud = new SyndicationContent(RssElementNames.Cloud);
-
-            cloud.AddAttribute(new SyndicationAttribute("domain", uri.GetComponents(UriComponents.Host, UriFormat.UriEscaped)));
-            cloud.AddAttribute(new SyndicationAttribute("port", uri.GetComponents(UriComponents.StrongPort, UriFormat.UriEscaped)));
-            cloud.AddAttribute(new SyndicationAttribute("path", uri.GetComponents(UriComponents.PathAndQuery, UriFormat.UriEscaped)));
-            cloud.AddAttribute(new SyndicationAttribute("registerProcedure", registerProcedure));
-            cloud.AddAttribute(new SyndicationAttribute("protocol", protocol ?? "xml-rpc"));
-
-            return Write(cloud);
+            throw new ArgumentException(nameof(ttl));
         }
 
-        public virtual Task WriteTimeToLive(TimeSpan ttl)
-        {
-            if (ttl == default(TimeSpan))
-            {
-                throw new ArgumentException(nameof(ttl));
-            }
+        return WriteValue(RssElementNames.TimeToLive, (long)Math.Max(1, Math.Ceiling(ttl.TotalMinutes)));
+    }
 
-            return WriteValue(RssElementNames.TimeToLive, (long)Math.Max(1, Math.Ceiling(ttl.TotalMinutes)));
+    public virtual Task WriteSkipHours(IEnumerable<byte> hours)
+    {
+        if (hours == null)
+        {
+            throw new ArgumentNullException(nameof(hours));
         }
 
-        public virtual Task WriteSkipHours(IEnumerable<byte> hours)
+        var skipHours = new SyndicationContent(RssElementNames.SkipHours);
+
+        foreach (var h in hours)
         {
-            if (hours == null)
+            if (h < 0 || h > 23)
             {
-                throw new ArgumentNullException(nameof(hours));
+                throw new ArgumentOutOfRangeException("Hour value must be between 0 and 23");
             }
 
-            var skipHours = new SyndicationContent(RssElementNames.SkipHours);
-
-            foreach (var h in hours)
-            {
-                if (h < 0 || h > 23)
-                {
-                    throw new ArgumentOutOfRangeException("Hour value must be between 0 and 23");
-                }
-
-                skipHours.AddField(new SyndicationContent("hour", Formatter.FormatValue(h)));
-            }
-
-            return Write(skipHours);
+            skipHours.AddField(new SyndicationContent("hour", Formatter.FormatValue(h)));
         }
 
-        public virtual Task WriteSkipDays(IEnumerable<DayOfWeek> days)
+        return Write(skipHours);
+    }
+
+    public virtual Task WriteSkipDays(IEnumerable<DayOfWeek> days)
+    {
+        if (days == null)
         {
-            if (days == null)
-            {
-                throw new ArgumentNullException(nameof(days));
-            }
-
-            var skipDays = new SyndicationContent(RssElementNames.SkipDays);
-
-            foreach (var d in days)
-            {
-                skipDays.AddField(new SyndicationContent("day", Formatter.FormatValue(d)));
-            }
-
-            return Write(skipDays);
+            throw new ArgumentNullException(nameof(days));
         }
 
-        public override Task WriteRaw(string content)
-        {
-            if (!_feedStarted)
-            {
-                StartFeed();
-            }
+        var skipDays = new SyndicationContent(RssElementNames.SkipDays);
 
-            return XmlUtils.WriteRawAsync(_writer, content);
+        foreach (var d in days)
+        {
+            skipDays.AddField(new SyndicationContent("day", Formatter.FormatValue(d)));
         }
 
-        private void StartFeed()
+        return Write(skipDays);
+    }
+
+    public override Task WriteRaw(string content)
+    {
+        if (!_feedStarted)
         {
-            // Write <rss version="2.0">
-            _writer.WriteStartElement(RssElementNames.Rss);
-
-            // Write attributes if exist
-            if (_attributes != null)
-            {
-                foreach (var a in _attributes)
-                {
-                    _writer.WriteSyndicationAttribute(a);
-                }
-            }
-
-            _writer.WriteAttributeString(RssElementNames.Version, RssConstants.Version);
-            _writer.WriteStartElement(RssElementNames.Channel);
-            _feedStarted = true;
+            StartFeed();
         }
+
+        return XmlUtils.WriteRawAsync(_writer, content);
+    }
+
+    private void StartFeed()
+    {
+        // Write <rss version="2.0">
+        _writer.WriteStartElement(RssElementNames.Rss);
+
+        // Write attributes if exist
+        if (_attributes != null)
+        {
+            foreach (var a in _attributes)
+            {
+                _writer.WriteSyndicationAttribute(a);
+            }
+        }
+
+        _writer.WriteAttributeString(RssElementNames.Version, RssConstants.Version);
+        _writer.WriteStartElement(RssElementNames.Channel);
+        _feedStarted = true;
     }
 }

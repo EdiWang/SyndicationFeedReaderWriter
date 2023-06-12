@@ -4,19 +4,18 @@
 
 using System;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public sealed class SyndicationCategory : ISyndicationCategory
 {
-    public sealed class SyndicationCategory : ISyndicationCategory
+    public SyndicationCategory(string name)
     {
-        public SyndicationCategory(string name)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-        }
-
-        public string Name { get; private set; }
-
-        public string Label { get; set; }
-
-        public string Scheme { get; set; }
+        Name = name ?? throw new ArgumentNullException(nameof(name));
     }
+
+    public string Name { get; private set; }
+
+    public string Label { get; set; }
+
+    public string Scheme { get; set; }
 }

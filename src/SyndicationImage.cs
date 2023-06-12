@@ -4,24 +4,23 @@
 
 using System;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public sealed class SyndicationImage : ISyndicationImage
 {
-    public sealed class SyndicationImage : ISyndicationImage
+    public SyndicationImage(Uri url, string relationshipType = null)
     {
-        public SyndicationImage(Uri url, string relationshipType = null)
-        {
-            Url = url ?? throw new ArgumentNullException(nameof(url));
-            RelationshipType = relationshipType;
-        }
-
-        public string Title { get; set; }
-
-        public Uri Url { get; private set; }
-
-        public ISyndicationLink Link { get; set; }
-
-        public string RelationshipType { get; set; }
-
-        public string Description { get; set; }
+        Url = url ?? throw new ArgumentNullException(nameof(url));
+        RelationshipType = relationshipType;
     }
+
+    public string Title { get; set; }
+
+    public Uri Url { get; private set; }
+
+    public ISyndicationLink Link { get; set; }
+
+    public string RelationshipType { get; set; }
+
+    public string Description { get; set; }
 }

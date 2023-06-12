@@ -2,16 +2,15 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public interface ISyndicationPerson
 {
-    public interface ISyndicationPerson
-    {
-        string Email { get; }
+    string Email { get; }
 
-        string Name { get; }
+    string Name { get; }
 
-        string Uri { get; }
+    string Uri { get; }
 
-        string RelationshipType { get; }
-    }
+    string RelationshipType { get; }
 }

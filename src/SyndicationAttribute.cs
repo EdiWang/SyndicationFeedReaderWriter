@@ -4,24 +4,23 @@
 
 using System;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public sealed class SyndicationAttribute : ISyndicationAttribute
 {
-    public sealed class SyndicationAttribute : ISyndicationAttribute
+    public SyndicationAttribute(string name, string value) :
+        this(name, null, value)
     {
-        public SyndicationAttribute(string name, string value) :
-            this(name, null, value)
-        {
-        }
-
-        public SyndicationAttribute(string name, string ns, string value)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Value = value ?? throw new ArgumentNullException(nameof(value));
-            Namespace = ns;
-        }
-
-        public string Name { get; private set; }
-        public string Namespace { get; private set; }
-        public string Value { get; private set; }
     }
+
+    public SyndicationAttribute(string name, string ns, string value)
+    {
+        Name = name ?? throw new ArgumentNullException(nameof(name));
+        Value = value ?? throw new ArgumentNullException(nameof(value));
+        Namespace = ns;
+    }
+
+    public string Name { get; private set; }
+    public string Namespace { get; private set; }
+    public string Value { get; private set; }
 }

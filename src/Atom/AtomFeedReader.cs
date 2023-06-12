@@ -7,91 +7,90 @@ using System;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Edi.SyndicationFeed.ReaderWriter.Atom
+namespace Edi.SyndicationFeed.ReaderWriter.Atom;
+
+public class AtomFeedReader : XmlFeedReader
 {
-    public class AtomFeedReader : XmlFeedReader
+    private readonly XmlReader _reader;
+    private bool _knownFeed;
+
+    public AtomFeedReader(XmlReader reader)
+        : this(reader, new AtomParser())
     {
-        private readonly XmlReader _reader;
-        private bool _knownFeed;
+    }
 
-        public AtomFeedReader(XmlReader reader)
-            : this(reader, new AtomParser())
+    public AtomFeedReader(XmlReader reader, ISyndicationFeedParser parser)
+        : base(reader, parser)
+    {
+        _reader = reader;
+    }
+
+    public override async Task<bool> Read()
+    {
+        if (!_knownFeed)
         {
+            await InitRead();
+            _knownFeed = true;
         }
 
-        public AtomFeedReader(XmlReader reader, ISyndicationFeedParser parser)
-            : base(reader, parser)
+        return await base.Read();
+    }
+
+    public virtual async Task<IAtomEntry> ReadEntry()
+    {
+        IAtomEntry item = await base.ReadItem() as IAtomEntry;
+
+        if (item == null)
         {
-            _reader = reader;
+            throw new FormatException("Invalid Atom entry");
         }
 
-        public override async Task<bool> Read()
-        {
-            if (!_knownFeed)
-            {
-                await InitRead();
-                _knownFeed = true;
-            }
+        return item;
+    }
 
-            return await base.Read();
+    protected override SyndicationElementType MapElementType(string elementName)
+    {
+        if (_reader.NamespaceURI != AtomConstants.Atom10Namespace)
+        {
+            return SyndicationElementType.Content;
         }
 
-        public virtual async Task<IAtomEntry> ReadEntry()
+        switch (elementName)
         {
-            IAtomEntry item = await base.ReadItem() as IAtomEntry;
+            case AtomElementNames.Entry:
+                return SyndicationElementType.Item;
 
-            if (item == null)
-            {
-                throw new FormatException("Invalid Atom entry");
-            }
+            case AtomElementNames.Link:
+                return SyndicationElementType.Link;
 
-            return item;
-        }
+            case AtomElementNames.Category:
+                return SyndicationElementType.Category;
 
-        protected override SyndicationElementType MapElementType(string elementName)
-        {
-            if (_reader.NamespaceURI != AtomConstants.Atom10Namespace)
-            {
+            case AtomElementNames.Logo:
+            case AtomElementNames.Icon:
+                return SyndicationElementType.Image;
+
+            case AtomContributorTypes.Author:
+            case AtomContributorTypes.Contributor:
+                return SyndicationElementType.Person;
+
+            default:
                 return SyndicationElementType.Content;
-            }
-
-            switch (elementName)
-            {
-                case AtomElementNames.Entry:
-                    return SyndicationElementType.Item;
-
-                case AtomElementNames.Link:
-                    return SyndicationElementType.Link;
-
-                case AtomElementNames.Category:
-                    return SyndicationElementType.Category;
-
-                case AtomElementNames.Logo:
-                case AtomElementNames.Icon:
-                    return SyndicationElementType.Image;
-
-                case AtomContributorTypes.Author:
-                case AtomContributorTypes.Contributor:
-                    return SyndicationElementType.Person;
-
-                default:
-                    return SyndicationElementType.Content;
-            }
         }
+    }
 
-        private async Task InitRead()
+    private async Task InitRead()
+    {
+        // Check <feed>
+
+        if (_reader.IsStartElement(AtomElementNames.Feed, AtomConstants.Atom10Namespace))
         {
-            // Check <feed>
-
-            if (_reader.IsStartElement(AtomElementNames.Feed, AtomConstants.Atom10Namespace))
-            {
-                //Read <feed>
-                await XmlUtils.ReadAsync(_reader);
-            }
-            else
-            {
-                throw new XmlException("Unknown Atom Feed");
-            }
+            //Read <feed>
+            await XmlUtils.ReadAsync(_reader);
+        }
+        else
+        {
+            throw new XmlException("Unknown Atom Feed");
         }
     }
 }

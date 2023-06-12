@@ -6,502 +6,501 @@ using Edi.SyndicationFeed.ReaderWriter.Utils;
 using System;
 using System.Xml;
 
-namespace Edi.SyndicationFeed.ReaderWriter.Atom
+namespace Edi.SyndicationFeed.ReaderWriter.Atom;
+
+public class AtomParser : ISyndicationFeedParser
 {
-    public class AtomParser : ISyndicationFeedParser
+    public ISyndicationCategory ParseCategory(string value)
     {
-        public ISyndicationCategory ParseCategory(string value)
+        ISyndicationContent content = ParseContent(value);
+
+        if (content.Name != AtomElementNames.Category)
         {
-            ISyndicationContent content = ParseContent(value);
-
-            if (content.Name != AtomElementNames.Category)
-            {
-                throw new FormatException("Invalid Atom Category");
-            }
-
-            return CreateCategory(content);
+            throw new FormatException("Invalid Atom Category");
         }
 
-        public ISyndicationImage ParseImage(string value)
+        return CreateCategory(content);
+    }
+
+    public ISyndicationImage ParseImage(string value)
+    {
+        ISyndicationContent content = ParseContent(value);
+
+        if (content.Name != AtomElementNames.Logo && content.Name != AtomElementNames.Icon)
         {
-            ISyndicationContent content = ParseContent(value);
-
-            if (content.Name != AtomElementNames.Logo && content.Name != AtomElementNames.Icon)
-            {
-                throw new FormatException("Invalid Atom Image");
-            }
-
-            return CreateImage(content);
+            throw new FormatException("Invalid Atom Image");
         }
 
-        public ISyndicationItem ParseItem(string value)
+        return CreateImage(content);
+    }
+
+    public ISyndicationItem ParseItem(string value)
+    {
+        return ParseEntry(value);
+    }
+
+    public IAtomEntry ParseEntry(string value)
+    {
+        ISyndicationContent content = ParseContent(value);
+
+        if (content.Name != AtomElementNames.Entry)
         {
-            return ParseEntry(value);
+            throw new FormatException("Invalid Atom feed");
         }
 
-        public IAtomEntry ParseEntry(string value)
+        return CreateEntry(content);
+    }
+
+    public ISyndicationLink ParseLink(string value)
+    {
+        ISyndicationContent content = ParseContent(value);
+
+        if (content.Name != AtomElementNames.Link)
         {
-            ISyndicationContent content = ParseContent(value);
-
-            if (content.Name != AtomElementNames.Entry)
-            {
-                throw new FormatException("Invalid Atom feed");
-            }
-
-            return CreateEntry(content);
+            throw new FormatException("Invalid Atom Link");
         }
 
-        public ISyndicationLink ParseLink(string value)
+        return CreateLink(content);
+    }
+
+    public ISyndicationPerson ParsePerson(string value)
+    {
+        ISyndicationContent content = ParseContent(value);
+
+        if (content.Name != AtomContributorTypes.Author && content.Name != AtomContributorTypes.Contributor)
         {
-            ISyndicationContent content = ParseContent(value);
-
-            if (content.Name != AtomElementNames.Link)
-            {
-                throw new FormatException("Invalid Atom Link");
-            }
-
-            return CreateLink(content);
+            throw new FormatException("Invalid Atom person");
         }
 
-        public ISyndicationPerson ParsePerson(string value)
+        return CreatePerson(content);
+    }
+
+    public ISyndicationContent ParseContent(string value)
+    {
+        if (string.IsNullOrEmpty(value))
         {
-            ISyndicationContent content = ParseContent(value);
-
-            if (content.Name != AtomContributorTypes.Author && content.Name != AtomContributorTypes.Contributor)
-            {
-                throw new FormatException("Invalid Atom person");
-            }
-
-            return CreatePerson(content);
+            throw new ArgumentNullException(nameof(value));
         }
 
-        public ISyndicationContent ParseContent(string value)
+        using (XmlReader reader = CreateXmlReader(value))
         {
-            if (string.IsNullOrEmpty(value))
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            reader.MoveToContent();
 
-            using (XmlReader reader = CreateXmlReader(value))
-            {
-                reader.MoveToContent();
+            return ReadSyndicationContent(reader);
+        }
+    }
 
-                return ReadSyndicationContent(reader);
-            }
+    public virtual bool TryParseValue<T>(string value, out T result)
+    {
+        return Converter.TryParseValue<T>(value, out result);
+    }
+
+    public virtual ISyndicationCategory CreateCategory(ISyndicationContent content)
+    {
+        if (content == null)
+        {
+            throw new ArgumentNullException(nameof(content));
         }
 
-        public virtual bool TryParseValue<T>(string value, out T result)
+        string term = content.Attributes.GetAtom(AtomConstants.Term);
+
+        if (term == null)
         {
-            return Converter.TryParseValue<T>(value, out result);
+            throw new FormatException("Invalid Atom category, requires Term attribute");
         }
 
-        public virtual ISyndicationCategory CreateCategory(ISyndicationContent content)
+        return new SyndicationCategory(term)
         {
-            if (content == null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
+            Scheme = content.Attributes.GetAtom(AtomConstants.Scheme),
+            Label = content.Attributes.GetAtom(AtomConstants.Label)
+        };
+    }
 
-            string term = content.Attributes.GetAtom(AtomConstants.Term);
-
-            if (term == null)
-            {
-                throw new FormatException("Invalid Atom category, requires Term attribute");
-            }
-
-            return new SyndicationCategory(term)
-            {
-                Scheme = content.Attributes.GetAtom(AtomConstants.Scheme),
-                Label = content.Attributes.GetAtom(AtomConstants.Label)
-            };
+    public virtual ISyndicationImage CreateImage(ISyndicationContent content)
+    {
+        if (content == null)
+        {
+            throw new ArgumentNullException(nameof(content));
         }
 
-        public virtual ISyndicationImage CreateImage(ISyndicationContent content)
+        if (!TryParseValue(content.Value, out Uri uri))
         {
-            if (content == null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
-
-            if (!TryParseValue(content.Value, out Uri uri))
-            {
-                throw new FormatException("Invalid Atom image url");
-            }
-
-            return new SyndicationImage(uri, content.Name);
+            throw new FormatException("Invalid Atom image url");
         }
 
-        public virtual ISyndicationLink CreateLink(ISyndicationContent content)
+        return new SyndicationImage(uri, content.Name);
+    }
+
+    public virtual ISyndicationLink CreateLink(ISyndicationContent content)
+    {
+        if (content == null)
         {
-            if (content == null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
-
-            //
-            // title
-            string title = content.Attributes.GetAtom(AtomElementNames.Title);
-
-            // type
-            string type = content.Attributes.GetAtom(AtomConstants.Type);
-
-            //
-            // length
-            long length = 0;
-            TryParseValue(content.Attributes.GetAtom(AtomConstants.Length), out length);
-
-            //
-            // rel
-            string rel = content.Attributes.GetAtom(AtomConstants.Rel) ?? ((content.Name == AtomElementNames.Link) ? AtomLinkTypes.Alternate : content.Name);
-
-            //
-            // href
-            TryParseValue(content.Attributes.GetAtom(AtomConstants.Href), out Uri uri);
-
-            // src
-            if (uri == null)
-            {
-                TryParseValue(content.Attributes.GetAtom(AtomConstants.Source), out uri);
-            }
-
-            if (uri == null)
-            {
-                throw new FormatException("Invalid uri");
-            }
-
-            return new SyndicationLink(uri, rel)
-            {
-                Title = title,
-                Length = length,
-                MediaType = type
-            };
+            throw new ArgumentNullException(nameof(content));
         }
 
-        public virtual ISyndicationPerson CreatePerson(ISyndicationContent content)
+        //
+        // title
+        string title = content.Attributes.GetAtom(AtomElementNames.Title);
+
+        // type
+        string type = content.Attributes.GetAtom(AtomConstants.Type);
+
+        //
+        // length
+        long length = 0;
+        TryParseValue(content.Attributes.GetAtom(AtomConstants.Length), out length);
+
+        //
+        // rel
+        string rel = content.Attributes.GetAtom(AtomConstants.Rel) ?? ((content.Name == AtomElementNames.Link) ? AtomLinkTypes.Alternate : content.Name);
+
+        //
+        // href
+        TryParseValue(content.Attributes.GetAtom(AtomConstants.Href), out Uri uri);
+
+        // src
+        if (uri == null)
         {
-            if (content == null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
-
-            string name = null;
-            string email = null;
-            string uri = null;
-
-            foreach (var field in content.Fields)
-            {
-                // content does not contain atom's namespace. So if we receibe a different namespace we will ignore it.
-                if (field.Namespace != AtomConstants.Atom10Namespace)
-                {
-                    continue;
-                }
-
-                switch (field.Name)
-                {
-                    //
-                    // Name
-                    case AtomElementNames.Name:
-                        name = field.Value;
-                        break;
-
-                    //
-                    // Email
-                    case AtomElementNames.Email:
-                        email = field.Value;
-                        break;
-
-                    //
-                    // Uri
-                    case AtomElementNames.Uri:
-                        uri = field.Value;
-                        break;
-                    //
-                    // Unrecognized field
-                    default:
-                        break;
-                }
-            }
-
-            return new SyndicationPerson(name, email, content.Name)
-            {
-                Uri = uri
-            };
+            TryParseValue(content.Attributes.GetAtom(AtomConstants.Source), out uri);
         }
 
-        public virtual IAtomEntry CreateEntry(ISyndicationContent content)
+        if (uri == null)
         {
-            if (content == null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
-
-            var item = new AtomEntry();
-
-
-            foreach (var field in content.Fields)
-            {
-                // content does not contain atom's namespace. So if we receibe a different namespace we will ignore it.
-                if (field.Namespace != AtomConstants.Atom10Namespace)
-                {
-                    continue;
-                }
-
-                switch (field.Name)
-                {
-                    //
-                    // Category
-                    case AtomElementNames.Category:
-                        item.AddCategory(CreateCategory(field));
-                        break;
-
-                    //
-                    // Content
-                    case AtomElementNames.Content:
-
-                        item.ContentType = field.Attributes.GetAtom(AtomConstants.Type) ?? AtomConstants.PlainTextContentType;
-
-                        if (field.Attributes.GetAtom(AtomConstants.Source) != null)
-                        {
-                            item.AddLink(CreateLink(field));
-                        }
-                        else
-                        {
-                            item.Description = field.Value;
-                        }
-
-                        break;
-
-                    //
-                    // Author/Contributor
-                    case AtomContributorTypes.Author:
-                    case AtomContributorTypes.Contributor:
-                        item.AddContributor(CreatePerson(field));
-                        break;
-
-                    //
-                    // Id
-                    case AtomElementNames.Id:
-                        item.Id = field.Value;
-                        break;
-
-                    //
-                    // Link
-                    case AtomElementNames.Link:
-                        item.AddLink(CreateLink(field));
-                        break;
-
-                    //
-                    // Published
-                    case AtomElementNames.Published:
-                        if (TryParseValue(field.Value, out DateTimeOffset published))
-                        {
-                            item.Published = published;
-                        }
-                        break;
-
-                    //
-                    // Rights
-                    case AtomElementNames.Rights:
-                        item.Rights = field.Value;
-                        break;
-
-                    //
-                    // Source
-                    case AtomElementNames.Source:
-                        item.AddLink(CreateSource(field));
-                        break;
-                    //
-                    // Summary
-                    case AtomElementNames.Summary:
-                        item.Summary = field.Value;
-                        break;
-
-                    //
-                    // Title
-                    case AtomElementNames.Title:
-                        item.Title = field.Value;
-                        break;
-
-                    //
-                    // Updated
-                    case AtomElementNames.Updated:
-                        if (TryParseValue(field.Value, out DateTimeOffset updated))
-                        {
-                            item.LastUpdated = updated;
-                        }
-                        break;
-
-                    //
-                    // Unrecognized tags
-                    default:
-                        break;
-                }
-            }
-
-
-            return item;
+            throw new FormatException("Invalid uri");
         }
 
-        public virtual ISyndicationLink CreateSource(ISyndicationContent content)
+        return new SyndicationLink(uri, rel)
         {
-            if (content == null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
+            Title = title,
+            Length = length,
+            MediaType = type
+        };
+    }
 
-            Uri url = null;
-            string title = null;
-            DateTimeOffset lastUpdated;
-
-            foreach (var field in content.Fields)
-            {
-                // content does not contain atom's namespace. So if we receibe a different namespace we will ignore it.
-                if (field.Namespace != AtomConstants.Atom10Namespace)
-                {
-                    continue;
-                }
-
-                switch (field.Name)
-                {
-                    //
-                    // Id
-                    case AtomElementNames.Id:
-
-                        if (url == null)
-                        {
-                            TryParseValue(field.Value, out url);
-                        }
-
-                        break;
-
-                    //
-                    // Title
-                    case AtomElementNames.Title:
-                        title = field.Value;
-                        break;
-
-                    //
-                    // Updated
-                    case AtomElementNames.Updated:
-                        TryParseValue(field.Value, out lastUpdated);
-                        break;
-
-                    //
-                    // Link
-                    case AtomElementNames.Link:
-                        if (url == null)
-                        {
-                            url = CreateLink(field).Uri;
-                        }
-                        break;
-
-                    //
-                    // Unrecognized
-                    default:
-                        break;
-                }
-            }
-
-            if (url == null)
-            {
-                throw new FormatException("Invalid source link");
-            }
-
-            return new SyndicationLink(url, AtomLinkTypes.Source)
-            {
-                Title = title,
-                LastUpdated = lastUpdated
-            };
+    public virtual ISyndicationPerson CreatePerson(ISyndicationContent content)
+    {
+        if (content == null)
+        {
+            throw new ArgumentNullException(nameof(content));
         }
 
-        private XmlReader CreateXmlReader(string value)
+        string name = null;
+        string email = null;
+        string uri = null;
+
+        foreach (var field in content.Fields)
         {
-            return XmlUtils.CreateXmlReader(value);
-        }
-
-        private static ISyndicationContent ReadSyndicationContent(XmlReader reader)
-        {
-            string type = null;
-
-            var content = new SyndicationContent(reader.LocalName, reader.NamespaceURI, null);
-
-            //
-            // Attributes
-            if (reader.HasAttributes)
+            // content does not contain atom's namespace. So if we receibe a different namespace we will ignore it.
+            if (field.Namespace != AtomConstants.Atom10Namespace)
             {
-                while (reader.MoveToNextAttribute())
-                {
-                    ISyndicationAttribute attr = reader.ReadSyndicationAttribute();
-
-                    if (attr != null)
-                    {
-                        if (type == null && attr.IsAtom(AtomConstants.Type))
-                        {
-                            type = attr.Value;
-                        }
-
-                        content.AddAttribute(attr);
-                    }
-                }
-
-                reader.MoveToContent();
+                continue;
             }
 
-            //
-            // Content
-            if (!reader.IsEmptyElement)
+            switch (field.Name)
             {
                 //
-                // Xml (applies to <content>)
-                if (XmlUtils.IsXmlMediaType(type) && content.IsAtom(AtomElementNames.Content))
-                {
-                    if (reader.NodeType != XmlNodeType.Element)
+                // Name
+                case AtomElementNames.Name:
+                    name = field.Value;
+                    break;
+
+                //
+                // Email
+                case AtomElementNames.Email:
+                    email = field.Value;
+                    break;
+
+                //
+                // Uri
+                case AtomElementNames.Uri:
+                    uri = field.Value;
+                    break;
+                //
+                // Unrecognized field
+                default:
+                    break;
+            }
+        }
+
+        return new SyndicationPerson(name, email, content.Name)
+        {
+            Uri = uri
+        };
+    }
+
+    public virtual IAtomEntry CreateEntry(ISyndicationContent content)
+    {
+        if (content == null)
+        {
+            throw new ArgumentNullException(nameof(content));
+        }
+
+        var item = new AtomEntry();
+
+
+        foreach (var field in content.Fields)
+        {
+            // content does not contain atom's namespace. So if we receibe a different namespace we will ignore it.
+            if (field.Namespace != AtomConstants.Atom10Namespace)
+            {
+                continue;
+            }
+
+            switch (field.Name)
+            {
+                //
+                // Category
+                case AtomElementNames.Category:
+                    item.AddCategory(CreateCategory(field));
+                    break;
+
+                //
+                // Content
+                case AtomElementNames.Content:
+
+                    item.ContentType = field.Attributes.GetAtom(AtomConstants.Type) ?? AtomConstants.PlainTextContentType;
+
+                    if (field.Attributes.GetAtom(AtomConstants.Source) != null)
                     {
-                        throw new FormatException($"Invalid Xml element");
+                        item.AddLink(CreateLink(field));
+                    }
+                    else
+                    {
+                        item.Description = field.Value;
+                    }
+
+                    break;
+
+                //
+                // Author/Contributor
+                case AtomContributorTypes.Author:
+                case AtomContributorTypes.Contributor:
+                    item.AddContributor(CreatePerson(field));
+                    break;
+
+                //
+                // Id
+                case AtomElementNames.Id:
+                    item.Id = field.Value;
+                    break;
+
+                //
+                // Link
+                case AtomElementNames.Link:
+                    item.AddLink(CreateLink(field));
+                    break;
+
+                //
+                // Published
+                case AtomElementNames.Published:
+                    if (TryParseValue(field.Value, out DateTimeOffset published))
+                    {
+                        item.Published = published;
+                    }
+                    break;
+
+                //
+                // Rights
+                case AtomElementNames.Rights:
+                    item.Rights = field.Value;
+                    break;
+
+                //
+                // Source
+                case AtomElementNames.Source:
+                    item.AddLink(CreateSource(field));
+                    break;
+                //
+                // Summary
+                case AtomElementNames.Summary:
+                    item.Summary = field.Value;
+                    break;
+
+                //
+                // Title
+                case AtomElementNames.Title:
+                    item.Title = field.Value;
+                    break;
+
+                //
+                // Updated
+                case AtomElementNames.Updated:
+                    if (TryParseValue(field.Value, out DateTimeOffset updated))
+                    {
+                        item.LastUpdated = updated;
+                    }
+                    break;
+
+                //
+                // Unrecognized tags
+                default:
+                    break;
+            }
+        }
+
+
+        return item;
+    }
+
+    public virtual ISyndicationLink CreateSource(ISyndicationContent content)
+    {
+        if (content == null)
+        {
+            throw new ArgumentNullException(nameof(content));
+        }
+
+        Uri url = null;
+        string title = null;
+        DateTimeOffset lastUpdated;
+
+        foreach (var field in content.Fields)
+        {
+            // content does not contain atom's namespace. So if we receibe a different namespace we will ignore it.
+            if (field.Namespace != AtomConstants.Atom10Namespace)
+            {
+                continue;
+            }
+
+            switch (field.Name)
+            {
+                //
+                // Id
+                case AtomElementNames.Id:
+
+                    if (url == null)
+                    {
+                        TryParseValue(field.Value, out url);
+                    }
+
+                    break;
+
+                //
+                // Title
+                case AtomElementNames.Title:
+                    title = field.Value;
+                    break;
+
+                //
+                // Updated
+                case AtomElementNames.Updated:
+                    TryParseValue(field.Value, out lastUpdated);
+                    break;
+
+                //
+                // Link
+                case AtomElementNames.Link:
+                    if (url == null)
+                    {
+                        url = CreateLink(field).Uri;
+                    }
+                    break;
+
+                //
+                // Unrecognized
+                default:
+                    break;
+            }
+        }
+
+        if (url == null)
+        {
+            throw new FormatException("Invalid source link");
+        }
+
+        return new SyndicationLink(url, AtomLinkTypes.Source)
+        {
+            Title = title,
+            LastUpdated = lastUpdated
+        };
+    }
+
+    private XmlReader CreateXmlReader(string value)
+    {
+        return XmlUtils.CreateXmlReader(value);
+    }
+
+    private static ISyndicationContent ReadSyndicationContent(XmlReader reader)
+    {
+        string type = null;
+
+        var content = new SyndicationContent(reader.LocalName, reader.NamespaceURI, null);
+
+        //
+        // Attributes
+        if (reader.HasAttributes)
+        {
+            while (reader.MoveToNextAttribute())
+            {
+                ISyndicationAttribute attr = reader.ReadSyndicationAttribute();
+
+                if (attr != null)
+                {
+                    if (type == null && attr.IsAtom(AtomConstants.Type))
+                    {
+                        type = attr.Value;
+                    }
+
+                    content.AddAttribute(attr);
+                }
+            }
+
+            reader.MoveToContent();
+        }
+
+        //
+        // Content
+        if (!reader.IsEmptyElement)
+        {
+            //
+            // Xml (applies to <content>)
+            if (XmlUtils.IsXmlMediaType(type) && content.IsAtom(AtomElementNames.Content))
+            {
+                if (reader.NodeType != XmlNodeType.Element)
+                {
+                    throw new FormatException($"Invalid Xml element");
+                }
+
+                content.Value = reader.ReadInnerXml();
+            }
+            else
+            {
+                reader.ReadStartElement();
+
+                //
+                // Xhtml
+                if (XmlUtils.IsXhtmlMediaType(type) && content.IsAtom())
+                {
+                    if (reader.NamespaceURI != AtomConstants.XhtmlNamespace)
+                    {
+                        throw new FormatException($"Invalid Xhtml namespace");
                     }
 
                     content.Value = reader.ReadInnerXml();
                 }
+                //
+                // Text/Html
+                else if (reader.HasValue)
+                {
+                    content.Value = reader.ReadContentAsString();
+                }
+                //
+                // Children
                 else
                 {
-                    reader.ReadStartElement();
-
-                    //
-                    // Xhtml
-                    if (XmlUtils.IsXhtmlMediaType(type) && content.IsAtom())
+                    while (reader.IsStartElement())
                     {
-                        if (reader.NamespaceURI != AtomConstants.XhtmlNamespace)
-                        {
-                            throw new FormatException($"Invalid Xhtml namespace");
-                        }
-
-                        content.Value = reader.ReadInnerXml();
+                        content.AddField(ReadSyndicationContent(reader));
                     }
-                    //
-                    // Text/Html
-                    else if (reader.HasValue)
-                    {
-                        content.Value = reader.ReadContentAsString();
-                    }
-                    //
-                    // Children
-                    else
-                    {
-                        while (reader.IsStartElement())
-                        {
-                            content.AddField(ReadSyndicationContent(reader));
-                        }
-                    }
-
-                    reader.ReadEndElement(); // end
                 }
-            }
-            else
-            {
-                reader.Skip();
-            }
 
-            return content;
+                reader.ReadEndElement(); // end
+            }
         }
+        else
+        {
+            reader.Skip();
+        }
+
+        return content;
     }
 }
