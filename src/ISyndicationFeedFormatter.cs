@@ -3,22 +3,21 @@
 // See the LICENSE file in the project root for more information.
 
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public interface ISyndicationFeedFormatter
 {
-    public interface ISyndicationFeedFormatter
-    {
-        string Format(ISyndicationContent content);
+    string Format(ISyndicationContent content);
 
-        string Format(ISyndicationCategory category);
+    string Format(ISyndicationCategory category);
 
-        string Format(ISyndicationImage image);
+    string Format(ISyndicationImage image);
 
-        string Format(ISyndicationItem item);
+    string Format(ISyndicationItem item);
 
-        string Format(ISyndicationPerson person);
+    string Format(ISyndicationPerson person);
 
-        string Format(ISyndicationLink link);
+    string Format(ISyndicationLink link);
 
-        string FormatValue<T>(T value);
-    }
+    string FormatValue<T>(T value);
 }

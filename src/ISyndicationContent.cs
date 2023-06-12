@@ -4,18 +4,17 @@
 
 using System.Collections.Generic;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public interface ISyndicationContent
 {
-    public interface ISyndicationContent
-    {
-        string Name { get; }
+    string Name { get; }
 
-        string Namespace { get; }
+    string Namespace { get; }
 
-        string Value { get; }
+    string Value { get; }
 
-        IEnumerable<ISyndicationContent> Fields { get; }
+    IEnumerable<ISyndicationContent> Fields { get; }
 
-        IEnumerable<ISyndicationAttribute> Attributes { get; }
-    }
+    IEnumerable<ISyndicationAttribute> Attributes { get; }
 }

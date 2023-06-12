@@ -5,153 +5,152 @@
 using System;
 using System.Xml;
 
-namespace Edi.SyndicationFeed.ReaderWriter.Utils
+namespace Edi.SyndicationFeed.ReaderWriter.Utils;
+
+static class XmlExtentions
 {
-    static class XmlExtentions
+    public static ISyndicationAttribute ReadSyndicationAttribute(this XmlReader reader)
     {
-        public static ISyndicationAttribute ReadSyndicationAttribute(this XmlReader reader)
+        if (reader.NodeType != XmlNodeType.Attribute)
         {
-            if (reader.NodeType != XmlNodeType.Attribute)
-            {
-                throw new InvalidOperationException("Invalid Xml Attribute");
-            }
-
-            string ns = reader.NamespaceURI;
-            string name = reader.LocalName;
-
-            if (XmlUtils.IsXmlns(name, ns) || XmlUtils.IsXmlSchemaType(name, ns))
-            {
-                return null;
-            }
-
-            return new SyndicationAttribute(name, ns, reader.Value);
+            throw new InvalidOperationException("Invalid Xml Attribute");
         }
 
+        string ns = reader.NamespaceURI;
+        string name = reader.LocalName;
 
-        public static void WriteStartSyndicationContent(this XmlWriter writer, ISyndicationContent content, string defaultNs)
+        if (XmlUtils.IsXmlns(name, ns) || XmlUtils.IsXmlSchemaType(name, ns))
         {
-            string ns = content.Namespace ?? defaultNs;
+            return null;
+        }
 
-            if (ns != null)
+        return new SyndicationAttribute(name, ns, reader.Value);
+    }
+
+
+    public static void WriteStartSyndicationContent(this XmlWriter writer, ISyndicationContent content, string defaultNs)
+    {
+        string ns = content.Namespace ?? defaultNs;
+
+        if (ns != null)
+        {
+            XmlUtils.SplitName(content.Name, out string prefix, out string localName);
+
+            prefix = writer.LookupPrefix(ns) ?? prefix;
+
+            if (prefix != null)
             {
-                XmlUtils.SplitName(content.Name, out string prefix, out string localName);
-
-                prefix = writer.LookupPrefix(ns) ?? prefix;
-
-                if (prefix != null)
-                {
-                    writer.WriteStartElement(prefix, localName, ns);
-                }
-                else
-                {
-                    writer.WriteStartElement(localName, ns);
-                }
+                writer.WriteStartElement(prefix, localName, ns);
             }
             else
             {
-                writer.WriteStartElement(content.Name);
+                writer.WriteStartElement(localName, ns);
             }
         }
-
-        public static void WriteSyndicationAttribute(this XmlWriter writer, ISyndicationAttribute attr)
+        else
         {
-            XmlUtils.SplitName(attr.Name, out string prefix, out string localName);
-
-            writer.WriteAttribute(prefix, attr.Name, localName, attr.Namespace, attr.Value);
+            writer.WriteStartElement(content.Name);
         }
+    }
 
-        public static void WriteXmlFragment(this XmlWriter writer, string fragment, string defaultNs)
+    public static void WriteSyndicationAttribute(this XmlWriter writer, ISyndicationAttribute attr)
+    {
+        XmlUtils.SplitName(attr.Name, out string prefix, out string localName);
+
+        writer.WriteAttribute(prefix, attr.Name, localName, attr.Namespace, attr.Value);
+    }
+
+    public static void WriteXmlFragment(this XmlWriter writer, string fragment, string defaultNs)
+    {
+        using (var reader = XmlUtils.CreateXmlReader(fragment))
         {
-            using (var reader = XmlUtils.CreateXmlReader(fragment))
+            reader.MoveToContent();
+
+            while (!reader.EOF)
             {
-                reader.MoveToContent();
+                string ns = !string.IsNullOrEmpty(reader.NamespaceURI) ? reader.NamespaceURI : defaultNs;
 
-                while (!reader.EOF)
+                //
+                // Start Element
+                if (reader.NodeType == XmlNodeType.Element)
                 {
-                    string ns = !string.IsNullOrEmpty(reader.NamespaceURI) ? reader.NamespaceURI : defaultNs;
-
-                    //
-                    // Start Element
-                    if (reader.NodeType == XmlNodeType.Element)
+                    if (ns == null)
                     {
-                        if (ns == null)
-                        {
-                            writer.WriteStartElement(reader.LocalName);
-                        }
-                        else
-                        {
-                            writer.WriteStartElement(reader.LocalName, ns);
-                        }
-
-                        if (reader.HasAttributes)
-                        {
-                            while (reader.MoveToNextAttribute())
-                            {
-                                if (!XmlUtils.IsXmlns(reader.Name, reader.Value))
-                                {
-                                    writer.WriteAttribute(reader.Prefix, reader.Name, reader.LocalName, ns, reader.Value);
-                                }
-                            }
-
-                            reader.MoveToContent();
-                        }
-
-                        if (reader.IsEmptyElement)
-                        {
-                            writer.WriteEndElement();
-                        }
-
-                        reader.Read();
-                        continue;
+                        writer.WriteStartElement(reader.LocalName);
+                    }
+                    else
+                    {
+                        writer.WriteStartElement(reader.LocalName, ns);
                     }
 
-                    //
-                    // End Element
-                    if (reader.NodeType == XmlNodeType.EndElement)
+                    if (reader.HasAttributes)
+                    {
+                        while (reader.MoveToNextAttribute())
+                        {
+                            if (!XmlUtils.IsXmlns(reader.Name, reader.Value))
+                            {
+                                writer.WriteAttribute(reader.Prefix, reader.Name, reader.LocalName, ns, reader.Value);
+                            }
+                        }
+
+                        reader.MoveToContent();
+                    }
+
+                    if (reader.IsEmptyElement)
                     {
                         writer.WriteEndElement();
-                        reader.Read();
-                        continue;
                     }
 
-                    //
-                    // Copy Content
-                    writer.WriteNode(reader, false);
+                    reader.Read();
+                    continue;
                 }
+
+                //
+                // End Element
+                if (reader.NodeType == XmlNodeType.EndElement)
+                {
+                    writer.WriteEndElement();
+                    reader.Read();
+                    continue;
+                }
+
+                //
+                // Copy Content
+                writer.WriteNode(reader, false);
             }
         }
+    }
 
-        public static void WriteString(this XmlWriter writer, string value, bool useCDATA)
+    public static void WriteString(this XmlWriter writer, string value, bool useCDATA)
+    {
+        if (useCDATA && XmlUtils.NeedXmlEscape(value))
         {
-            if (useCDATA && XmlUtils.NeedXmlEscape(value))
-            {
-                writer.WriteCData(value);
-            }
-            else
-            {
-                writer.WriteString(value);
-            }
+            writer.WriteCData(value);
         }
-
-        private static void WriteAttribute(this XmlWriter writer, string prefix, string name, string localName, string ns, string value)
+        else
         {
-            prefix = prefix ?? writer.LookupPrefix(ns ?? string.Empty);
-
-            if (prefix == string.Empty)
-            {
-                writer.WriteStartAttribute(name);
-            }
-            else if (prefix != null)
-            {
-                writer.WriteStartAttribute(prefix, localName, ns);
-            }
-            else
-            {
-                writer.WriteStartAttribute(localName, ns);
-            }
-
             writer.WriteString(value);
-            writer.WriteEndAttribute();
         }
+    }
+
+    private static void WriteAttribute(this XmlWriter writer, string prefix, string name, string localName, string ns, string value)
+    {
+        prefix = prefix ?? writer.LookupPrefix(ns ?? string.Empty);
+
+        if (prefix == string.Empty)
+        {
+            writer.WriteStartAttribute(name);
+        }
+        else if (prefix != null)
+        {
+            writer.WriteStartAttribute(prefix, localName, ns);
+        }
+        else
+        {
+            writer.WriteStartAttribute(localName, ns);
+        }
+
+        writer.WriteString(value);
+        writer.WriteEndAttribute();
     }
 }

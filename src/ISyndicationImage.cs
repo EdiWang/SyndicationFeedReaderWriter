@@ -4,18 +4,17 @@
 
 using System;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public interface ISyndicationImage
 {
-    public interface ISyndicationImage
-    {
-        string Title { get; }
+    string Title { get; }
 
-        Uri Url { get; }
+    Uri Url { get; }
 
-        ISyndicationLink Link { get; }
+    ISyndicationLink Link { get; }
 
-        string RelationshipType { get; }
+    string RelationshipType { get; }
 
-        string Description { get; }
-    }
+    string Description { get; }
 }

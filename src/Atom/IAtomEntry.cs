@@ -2,14 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace Edi.SyndicationFeed.ReaderWriter.Atom
+namespace Edi.SyndicationFeed.ReaderWriter.Atom;
+
+public interface IAtomEntry : ISyndicationItem
 {
-    public interface IAtomEntry : ISyndicationItem
-    {
-        string ContentType { get; }
+    string ContentType { get; }
 
-        string Summary { get; }
+    string Summary { get; }
 
-        string Rights { get; }
-    }
+    string Rights { get; }
 }

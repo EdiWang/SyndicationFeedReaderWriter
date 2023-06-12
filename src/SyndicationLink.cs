@@ -4,26 +4,25 @@
 
 using System;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public sealed class SyndicationLink : ISyndicationLink
 {
-    public sealed class SyndicationLink : ISyndicationLink
+    public SyndicationLink(Uri url, string relationshipType = null)
     {
-        public SyndicationLink(Uri url, string relationshipType = null)
-        {
-            Uri = url ?? throw new ArgumentNullException(nameof(url));
-            RelationshipType = relationshipType;
-        }
-
-        public Uri Uri { get; private set; }
-
-        public string Title { get; set; }
-
-        public string MediaType { get; set; }
-
-        public string RelationshipType { get; }
-
-        public long Length { get; set; }
-
-        public DateTimeOffset LastUpdated { get; set; }
+        Uri = url ?? throw new ArgumentNullException(nameof(url));
+        RelationshipType = relationshipType;
     }
+
+    public Uri Uri { get; }
+
+    public string Title { get; set; }
+
+    public string MediaType { get; set; }
+
+    public string RelationshipType { get; }
+
+    public long Length { get; set; }
+
+    public DateTimeOffset LastUpdated { get; set; }
 }

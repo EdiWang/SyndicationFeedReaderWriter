@@ -6,117 +6,116 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public class SyndicationItem : ISyndicationItem
 {
-    public class SyndicationItem : ISyndicationItem
+    private ICollection<ISyndicationCategory> _categories;
+    private ICollection<ISyndicationPerson> _contributors;
+    private ICollection<ISyndicationLink> _links;
+
+    public SyndicationItem()
     {
-        private ICollection<ISyndicationCategory> _categories;
-        private ICollection<ISyndicationPerson> _contributors;
-        private ICollection<ISyndicationLink> _links;
+        _categories = new List<ISyndicationCategory>();
+        _contributors = new List<ISyndicationPerson>();
+        _links = new List<ISyndicationLink>();
+    }
 
-        public SyndicationItem()
+    public SyndicationItem(ISyndicationItem item)
+    {
+        if (item == null)
         {
-            _categories = new List<ISyndicationCategory>();
-            _contributors = new List<ISyndicationPerson>();
-            _links = new List<ISyndicationLink>();
+            throw new ArgumentNullException(nameof(item));
         }
 
-        public SyndicationItem(ISyndicationItem item)
+        Id = item.Id;
+        Title = item.Title;
+        Description = item.Description;
+        LastUpdated = item.LastUpdated;
+        Published = item.Published;
+
+        // Copy collections only if needed
+        _categories = item.Categories as ICollection<ISyndicationCategory> ?? item.Categories.ToList();
+        _contributors = item.Contributors as ICollection<ISyndicationPerson> ?? item.Contributors.ToList();
+        _links = item.Links as ICollection<ISyndicationLink> ?? item.Links.ToList();
+    }
+
+    public string Id { get; set; }
+
+    public string Title { get; set; }
+
+    public string Description { get; set; }
+
+    public IEnumerable<ISyndicationCategory> Categories
+    {
+        get
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
+            return _categories;
+        }
+    }
 
-            Id = item.Id;
-            Title = item.Title;
-            Description = item.Description;
-            LastUpdated = item.LastUpdated;
-            Published = item.Published;
+    public IEnumerable<ISyndicationPerson> Contributors
+    {
+        get
+        {
+            return _contributors;
+        }
+    }
 
-            // Copy collections only if needed
-            _categories = item.Categories as ICollection<ISyndicationCategory> ?? item.Categories.ToList();
-            _contributors = item.Contributors as ICollection<ISyndicationPerson> ?? item.Contributors.ToList();
-            _links = item.Links as ICollection<ISyndicationLink> ?? item.Links.ToList();
+    public IEnumerable<ISyndicationLink> Links
+    {
+        get
+        {
+            return _links;
+        }
+    }
+
+    public DateTimeOffset LastUpdated { get; set; }
+
+    public DateTimeOffset Published { get; set; }
+
+    public void AddCategory(ISyndicationCategory category)
+    {
+        if (category == null)
+        {
+            throw new ArgumentNullException(nameof(category));
         }
 
-        public string Id { get; set; }
-
-        public string Title { get; set; }
-
-        public string Description { get; set; }
-
-        public IEnumerable<ISyndicationCategory> Categories
+        if (_categories.IsReadOnly)
         {
-            get
-            {
-                return _categories;
-            }
+            _categories = _categories.ToList();
         }
 
-        public IEnumerable<ISyndicationPerson> Contributors
+        _categories.Add(category);
+    }
+
+    public void AddContributor(ISyndicationPerson person)
+    {
+        if (person == null)
         {
-            get
-            {
-                return _contributors;
-            }
+            throw new ArgumentNullException(nameof(person));
         }
 
-        public IEnumerable<ISyndicationLink> Links
+        if (_contributors.IsReadOnly)
         {
-            get
-            {
-                return _links;
-            }
+            _contributors = _contributors.ToList();
         }
 
-        public DateTimeOffset LastUpdated { get; set; }
+        _contributors.Add(person);
+    }
 
-        public DateTimeOffset Published { get; set; }
-
-        public void AddCategory(ISyndicationCategory category)
+    public void AddLink(ISyndicationLink link)
+    {
+        if (link == null)
         {
-            if (category == null)
-            {
-                throw new ArgumentNullException(nameof(category));
-            }
-
-            if (_categories.IsReadOnly)
-            {
-                _categories = _categories.ToList();
-            }
-
-            _categories.Add(category);
+            throw new ArgumentNullException(nameof(link));
         }
 
-        public void AddContributor(ISyndicationPerson person)
+        if (_links.IsReadOnly)
         {
-            if (person == null)
-            {
-                throw new ArgumentNullException(nameof(person));
-            }
-
-            if (_contributors.IsReadOnly)
-            {
-                _contributors = _contributors.ToList();
-            }
-
-            _contributors.Add(person);
+            _links = _links.ToList();
         }
 
-        public void AddLink(ISyndicationLink link)
-        {
-            if (link == null)
-            {
-                throw new ArgumentNullException(nameof(link));
-            }
-
-            if (_links.IsReadOnly)
-            {
-                _links = _links.ToList();
-            }
-
-            _links.Add(link);
-        }
+        _links.Add(link);
     }
 }

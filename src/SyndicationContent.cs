@@ -6,100 +6,99 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public class SyndicationContent : ISyndicationContent
 {
-    public class SyndicationContent : ISyndicationContent
+    private ICollection<ISyndicationAttribute> _attributes;
+    private ICollection<ISyndicationContent> _children;
+
+    public SyndicationContent(string name, string value = null)
+        : this(name, null, value)
     {
-        private ICollection<ISyndicationAttribute> _attributes;
-        private ICollection<ISyndicationContent> _children;
+    }
 
-        public SyndicationContent(string name, string value = null)
-            : this(name, null, value)
+    public SyndicationContent(string name, string ns, string value)
+    {
+        if (string.IsNullOrEmpty(name))
         {
+            throw new ArgumentNullException(nameof(name));
         }
 
-        public SyndicationContent(string name, string ns, string value)
+
+        Name = name;
+        Value = value;
+        Namespace = ns;
+
+        _attributes = new List<ISyndicationAttribute>();
+        _children = new List<ISyndicationContent>();
+    }
+
+    public SyndicationContent(ISyndicationContent content)
+    {
+        if (content == null)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-
-            Name = name;
-            Value = value;
-            Namespace = ns;
-
-            _attributes = new List<ISyndicationAttribute>();
-            _children = new List<ISyndicationContent>();
+            throw new ArgumentNullException(nameof(content));
         }
 
-        public SyndicationContent(ISyndicationContent content)
+        Name = content.Name;
+        Namespace = content.Namespace;
+        Value = content.Value;
+
+        // Copy collections only if needed
+        _attributes = content.Attributes as ICollection<ISyndicationAttribute> ?? content.Attributes.ToList();
+        _children = content.Fields as ICollection<ISyndicationContent> ?? content.Fields.ToList();
+    }
+
+    public string Name { get; }
+
+    public string Namespace { get; }
+
+    public string Value { get; set; }
+
+    public IEnumerable<ISyndicationAttribute> Attributes
+    {
+        get
         {
-            if (content == null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
+            return _attributes;
+        }
+    }
 
-            Name = content.Name;
-            Namespace = content.Namespace;
-            Value = content.Value;
+    public IEnumerable<ISyndicationContent> Fields
+    {
+        get
+        {
+            return _children;
+        }
+    }
 
-            // Copy collections only if needed
-            _attributes = content.Attributes as ICollection<ISyndicationAttribute> ?? content.Attributes.ToList();
-            _children = content.Fields as ICollection<ISyndicationContent> ?? content.Fields.ToList();
+    public void AddAttribute(ISyndicationAttribute attribute)
+    {
+        if (attribute == null)
+        {
+            throw new ArgumentNullException(nameof(attribute));
         }
 
-        public string Name { get; private set; }
-
-        public string Namespace { get; private set; }
-
-        public string Value { get; set; }
-
-        public IEnumerable<ISyndicationAttribute> Attributes
+        if (_attributes.IsReadOnly)
         {
-            get
-            {
-                return _attributes;
-            }
+            _attributes = _attributes.ToList();
         }
 
-        public IEnumerable<ISyndicationContent> Fields
+        _attributes.Add(attribute);
+    }
+
+    public void AddField(ISyndicationContent field)
+    {
+        if (field == null)
         {
-            get
-            {
-                return _children;
-            }
+            throw new ArgumentNullException(nameof(field));
         }
 
-        public void AddAttribute(ISyndicationAttribute attribute)
+        if (_children.IsReadOnly)
         {
-            if (attribute == null)
-            {
-                throw new ArgumentNullException(nameof(attribute));
-            }
-
-            if (_attributes.IsReadOnly)
-            {
-                _attributes = _attributes.ToList();
-            }
-
-            _attributes.Add(attribute);
+            _children = _children.ToList();
         }
 
-        public void AddField(ISyndicationContent field)
-        {
-            if (field == null)
-            {
-                throw new ArgumentNullException(nameof(field));
-            }
-
-            if (_children.IsReadOnly)
-            {
-                _children = _children.ToList();
-            }
-
-            _children.Add(field);
-        }
+        _children.Add(field);
     }
 }

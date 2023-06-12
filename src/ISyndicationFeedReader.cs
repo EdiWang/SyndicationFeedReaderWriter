@@ -4,32 +4,31 @@
 
 using System.Threading.Tasks;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public interface ISyndicationFeedReader
 {
-    public interface ISyndicationFeedReader
-    {
-        Task<bool> Read();
+    Task<bool> Read();
 
-        Task Skip();
+    Task Skip();
 
-        SyndicationElementType ElementType { get; }
+    SyndicationElementType ElementType { get; }
 
-        string ElementName { get; }
+    string ElementName { get; }
 
-        Task<ISyndicationItem> ReadItem();
+    Task<ISyndicationItem> ReadItem();
 
-        Task<ISyndicationLink> ReadLink();
+    Task<ISyndicationLink> ReadLink();
 
-        Task<ISyndicationPerson> ReadPerson();
+    Task<ISyndicationPerson> ReadPerson();
 
-        Task<ISyndicationImage> ReadImage();
+    Task<ISyndicationImage> ReadImage();
 
-        Task<ISyndicationContent> ReadContent();
+    Task<ISyndicationContent> ReadContent();
 
-        Task<ISyndicationCategory> ReadCategory();
+    Task<ISyndicationCategory> ReadCategory();
 
-        Task<T> ReadValue<T>();
+    Task<T> ReadValue<T>();
 
-        Task<string> ReadElementAsString();
-    }
+    Task<string> ReadElementAsString();
 }

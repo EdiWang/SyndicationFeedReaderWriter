@@ -4,24 +4,23 @@
 
 using System.Threading.Tasks;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public interface ISyndicationFeedWriter
 {
-    public interface ISyndicationFeedWriter
-    {
-        Task Write(ISyndicationContent content);
+    Task Write(ISyndicationContent content);
 
-        Task Write(ISyndicationCategory category);
+    Task Write(ISyndicationCategory category);
 
-        Task Write(ISyndicationImage image);
+    Task Write(ISyndicationImage image);
 
-        Task Write(ISyndicationItem item);
+    Task Write(ISyndicationItem item);
 
-        Task Write(ISyndicationPerson person);
+    Task Write(ISyndicationPerson person);
 
-        Task Write(ISyndicationLink link);
+    Task Write(ISyndicationLink link);
 
-        Task WriteValue<T>(string name, T value);
+    Task WriteValue<T>(string name, T value);
 
-        Task WriteRaw(string content);
-    }
+    Task WriteRaw(string content);
 }

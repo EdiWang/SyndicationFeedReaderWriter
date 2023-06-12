@@ -5,24 +5,23 @@
 using System;
 using System.Collections.Generic;
 
-namespace Edi.SyndicationFeed.ReaderWriter
+namespace Edi.SyndicationFeed.ReaderWriter;
+
+public interface ISyndicationItem
 {
-    public interface ISyndicationItem
-    {
-        string Id { get; }
+    string Id { get; }
 
-        string Title { get; }
+    string Title { get; }
 
-        string Description { get; }
+    string Description { get; }
 
-        IEnumerable<ISyndicationCategory> Categories { get; }
+    IEnumerable<ISyndicationCategory> Categories { get; }
 
-        IEnumerable<ISyndicationPerson> Contributors { get; }
+    IEnumerable<ISyndicationPerson> Contributors { get; }
 
-        IEnumerable<ISyndicationLink> Links { get; }
+    IEnumerable<ISyndicationLink> Links { get; }
 
-        DateTimeOffset LastUpdated { get; }
+    DateTimeOffset LastUpdated { get; }
 
-        DateTimeOffset Published { get; }
-    }
+    DateTimeOffset Published { get; }
 }
