@@ -2,10 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Edi.SyndicationFeed.ReaderWriter;
-using Edi.SyndicationFeed.ReaderWriter.Atom;
 using System.Threading.Tasks;
 using System.Xml;
+using Edi.SyndicationFeed.ReaderWriter.Atom;
+
+namespace Edi.SyndicationFeed.ReaderWriter.Examples;
 
 /// <summary>
 /// Consumes an entire atom feed using the AtomFeedReader.
