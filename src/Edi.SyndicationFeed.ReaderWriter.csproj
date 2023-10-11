@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.0.1</Version>
+        <Version>2.0.2</Version>
         <TargetFramework>net6.0</TargetFramework>
+        <Company>Microsoft</Company>
         <Authors>Microsoft, Edi Wang</Authors>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -12,11 +13,16 @@
         <description>Edi.SyndicationFeed.ReaderWriter (original Microsoft.SyndicationFeed.ReaderWriter) provides lightweight forward-only read/write APIs (similar to .NET XmlReader) to simplify operations with RSS and Atom syndication feeds. It offers extensiblity to support custom feed elements and formatting. The workflow is async on demand, which enables this library to be used on syndication feeds of arbitrary size or stream latency.</description>
         <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
         <PackagingToolsInsufficientSDKVersion>false</PackagingToolsInsufficientSDKVersion>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="System.Globalization" Version="4.3.0" />
         <PackageReference Include="System.Linq" Version="4.3.0" />
         <PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />
         <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 </Project>
