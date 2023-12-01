@@ -97,14 +97,14 @@ public class RssFormatter : ISyndicationFeedFormatter
         // DateTimeOffset
         if (type == typeof(DateTimeOffset))
         {
-            return DateTimeUtils.ToRfc1123String((DateTimeOffset)(object)value);
+            return DateTimeUtils.ToRfc3339String((DateTimeOffset)(object)value);
         }
 
         //
         // DateTime
         if (type == typeof(DateTime))
         {
-            return DateTimeUtils.ToRfc1123String(new DateTimeOffset((DateTime)(object)value));
+            return DateTimeUtils.ToRfc3339String(new DateTimeOffset((DateTime)(object)value));
         }
 
         return value.ToString();
