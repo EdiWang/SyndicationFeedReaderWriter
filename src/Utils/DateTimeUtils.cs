@@ -36,11 +36,6 @@ static class DateTimeUtils
         }
     }
 
-    public static string ToRfc1123String(DateTimeOffset dto)
-    {
-        return dto.ToString("r");
-    }
-
     private static bool TryParseDateRssSpec(string value, out DateTimeOffset result)
     {
         if (string.IsNullOrEmpty(value))
