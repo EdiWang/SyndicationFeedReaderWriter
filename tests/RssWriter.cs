@@ -183,7 +183,7 @@ public class RssWriter
         }
 
         string res = sw.ToString();
-        Assert.True(res == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><rss version=\"2.0\"><channel><item><title>First item on ItemWriter</title><link>{url}</link><enclosure url=\"{url}\" length=\"4123\" type=\"audio/mpeg\" /><comments>{url}</comments><source url=\"{url}\">Anonymous Blog</source><guid>{item.Id}</guid><description>Brief description of an item</description><author>person@email.com (John Doe)</author><category>Test Category</category><pubDate>{item.Published.ToRfc1123()}</pubDate></item></channel></rss>", res);
+        Assert.True(res == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><rss version=\"2.0\"><channel><item><title>First item on ItemWriter</title><link>https://contoso.com/</link><enclosure url=\"https://contoso.com/\" length=\"4123\" type=\"audio/mpeg\" /><comments>https://contoso.com/</comments><source url=\"https://contoso.com/\">Anonymous Blog</source><guid>https://contoso.com/28af09b3-86c7-4dd6-b56f-58aaa17cff62</guid><description>Brief description of an item</description><author>person@email.com (John Doe)</author><category>Test Category</category><pubDate>{item.Published.ToRfc3339()}</pubDate></item></channel></rss>", res);
     }
 
     [Fact]
