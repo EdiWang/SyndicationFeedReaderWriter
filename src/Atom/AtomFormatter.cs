@@ -412,6 +412,13 @@ public class AtomFormatter : ISyndicationFeedFormatter
         }
 
         //
+        // hreflang
+        if (!string.IsNullOrEmpty(link.Hreflang))
+        {
+            result.AddAttribute(new SyndicationAttribute(AtomConstants.Hreflang, link.Hreflang));
+        }
+
+        //
         // length
         if (link.Length > 0)
         {
@@ -459,7 +466,8 @@ public class AtomFormatter : ISyndicationFeedFormatter
         result.AddField(CreateFromLink(new SyndicationLink(link.Uri)
         {
             MediaType = link.MediaType,
-            Length = link.Length
+            Length = link.Length,
+            Hreflang = link.Hreflang
         }));
 
         //
