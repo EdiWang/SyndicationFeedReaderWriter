@@ -10,8 +10,8 @@
 * [Visual Studio 2022](https://www.visualstudio.com/vs/whatsnew/)
 
 ### Supports:
-* .NET 6.0
 * .NET 8.0
+* .NET 9.0
 
 ### Building:
 * The solution will build in Visual Studio 2022 after cloning.
