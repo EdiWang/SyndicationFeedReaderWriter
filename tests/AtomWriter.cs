@@ -108,6 +108,32 @@ public class AtomWriter
         Assert.True(CheckResult(res, $"<link title=\"{link.Title}\" href=\"{link.Uri}\" type=\"{link.MediaType}\" length=\"{link.Length}\" />"));
     }
 
+    [Fact]
+    public async Task WriteLinkWithHreflang()
+    {
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+        var link = new SyndicationLink(new Uri("http://contoso.com"))
+        {
+            Title = "Test title",
+            Length = 123,
+            MediaType = "mp3/video",
+            Hreflang = "en"
+        };
+
+        using (var xmlWriter = XmlWriter.Create(sw))
+        {
+            var writer = new AtomFeedWriter(xmlWriter);
+
+            await writer.Write(link);
+
+            await writer.Flush();
+        }
+
+        string res = sw.ToString();
+        Assert.True(CheckResult(res, $"<link title=\"{link.Title}\" href=\"{link.Uri}\" type=\"{link.MediaType}\" hreflang=\"en\" length=\"{link.Length}\" />"));
+    }
+
 
     [Fact]
     public async Task WriteEntry()

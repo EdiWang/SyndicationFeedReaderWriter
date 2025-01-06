@@ -14,6 +14,7 @@ static class AtomConstants
     public const string SpecificationLink = "http://atompub.org/2005/08/17/draft-ietf-atompub-format-11.html";
 
     public const string Href = "href";
+    public const string Hreflang = "hreflang";
     public const string Label = "label";
     public const string Length = "length";
     public const string Rel = "rel";

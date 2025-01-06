@@ -18,5 +18,7 @@ public interface ISyndicationLink
 
     long Length { get; }
 
+    string Hreflang { get; set; }
+
     DateTimeOffset LastUpdated { get; }
 }

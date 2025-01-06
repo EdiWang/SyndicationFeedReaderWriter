@@ -150,6 +150,10 @@ public class AtomParser : ISyndicationFeedParser
         long length = 0;
         TryParseValue(content.Attributes.GetAtom(AtomConstants.Length), out length);
 
+        // 
+        // hreflang
+        string hreflang = content.Attributes.GetAtom(AtomConstants.Hreflang);
+
         //
         // rel
         string rel = content.Attributes.GetAtom(AtomConstants.Rel) ?? ((content.Name == AtomElementNames.Link) ? AtomLinkTypes.Alternate : content.Name);
@@ -173,7 +177,8 @@ public class AtomParser : ISyndicationFeedParser
         {
             Title = title,
             Length = length,
-            MediaType = type
+            MediaType = type,
+            Hreflang = hreflang
         };
     }
 

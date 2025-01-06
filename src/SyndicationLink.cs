@@ -24,5 +24,7 @@ public sealed class SyndicationLink : ISyndicationLink
 
     public long Length { get; set; }
 
+    public string Hreflang { get; set; }
+
     public DateTimeOffset LastUpdated { get; set; }
 }
