@@ -10,7 +10,7 @@ static class Converter
 {
     public static bool TryParseValue<T>(string value, out T result)
     {
-        result = default(T);
+        result = default;
 
         Type type = typeof(T);
 

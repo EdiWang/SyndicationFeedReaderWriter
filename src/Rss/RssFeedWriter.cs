@@ -64,7 +64,7 @@ public class RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> 
 
     public virtual Task WritePubDate(DateTimeOffset dt)
     {
-        if (dt == default(DateTimeOffset))
+        if (dt == default)
         {
             throw new ArgumentException(nameof(dt));
         }
@@ -74,7 +74,7 @@ public class RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> 
 
     public virtual Task WriteLastBuildDate(DateTimeOffset dt)
     {
-        if (dt == default(DateTimeOffset))
+        if (dt == default)
         {
             throw new ArgumentException(nameof(dt));
         }
@@ -127,7 +127,7 @@ public class RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> 
 
     public virtual Task WriteTimeToLive(TimeSpan ttl)
     {
-        if (ttl == default(TimeSpan))
+        if (ttl == default)
         {
             throw new ArgumentException(nameof(ttl));
         }

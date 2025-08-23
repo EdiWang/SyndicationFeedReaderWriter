@@ -239,7 +239,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
             throw new ArgumentNullException("Title");
         }
 
-        if (item.LastUpdated == default(DateTimeOffset))
+        if (item.LastUpdated == default)
         {
             throw new ArgumentException("LastUpdated");
         }
@@ -260,7 +260,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
 
         //
         // published
-        if (item.Published != default(DateTimeOffset))
+        if (item.Published != default)
         {
             result.AddField(new SyndicationContent(AtomElementNames.Published, FormatValue(item.Published)));
         }
@@ -467,7 +467,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
 
         //
         // updated
-        if (link.LastUpdated != default(DateTimeOffset))
+        if (link.LastUpdated != default)
         {
             result.AddField(new SyndicationContent(AtomElementNames.Updated, FormatValue(link.LastUpdated)));
         }
