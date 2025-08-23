@@ -9,17 +9,11 @@ using System.Xml;
 
 namespace Edi.SyndicationFeed.ReaderWriter;
 
-public abstract class XmlFeedWriter : ISyndicationFeedWriter
+public abstract class XmlFeedWriter(XmlWriter writer, ISyndicationFeedFormatter formatter) : ISyndicationFeedWriter
 {
-    private readonly XmlWriter _writer;
+    private readonly XmlWriter _writer = writer ?? throw new ArgumentNullException(nameof(writer));
 
-    protected XmlFeedWriter(XmlWriter writer, ISyndicationFeedFormatter formatter)
-    {
-        _writer = writer ?? throw new ArgumentNullException(nameof(writer));
-        Formatter = formatter ?? throw new ArgumentNullException(nameof(formatter));
-    }
-
-    public ISyndicationFeedFormatter Formatter { get; }
+    public ISyndicationFeedFormatter Formatter { get; } = formatter ?? throw new ArgumentNullException(nameof(formatter));
 
     public virtual Task Write(ISyndicationContent content)
     {

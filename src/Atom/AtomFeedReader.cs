@@ -9,20 +9,14 @@ using System.Xml;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Atom;
 
-public class AtomFeedReader : XmlFeedReader
+public class AtomFeedReader(XmlReader reader, ISyndicationFeedParser parser) : XmlFeedReader(reader, parser)
 {
-    private readonly XmlReader _reader;
+    private readonly XmlReader _reader = reader;
     private bool _knownFeed;
 
     public AtomFeedReader(XmlReader reader)
         : this(reader, new AtomParser())
     {
-    }
-
-    public AtomFeedReader(XmlReader reader, ISyndicationFeedParser parser)
-        : base(reader, parser)
-    {
-        _reader = reader;
     }
 
     public override async Task<bool> Read()

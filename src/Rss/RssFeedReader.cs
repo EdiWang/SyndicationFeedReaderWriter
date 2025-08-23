@@ -8,20 +8,14 @@ using System.Xml;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Rss;
 
-public class RssFeedReader : XmlFeedReader
+public class RssFeedReader(XmlReader reader, ISyndicationFeedParser parser) : XmlFeedReader(reader, parser)
 {
-    private readonly XmlReader _reader;
+    private readonly XmlReader _reader = reader;
     private bool _knownFeed;
 
     public RssFeedReader(XmlReader reader)
         : this(reader, new RssParser())
     {
-    }
-
-    public RssFeedReader(XmlReader reader, ISyndicationFeedParser parser)
-        : base(reader, parser)
-    {
-        _reader = reader;
     }
 
     public override async Task<bool> Read()

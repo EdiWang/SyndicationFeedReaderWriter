@@ -6,14 +6,9 @@ using System;
 
 namespace Edi.SyndicationFeed.ReaderWriter;
 
-public sealed class SyndicationCategory : ISyndicationCategory
+public sealed class SyndicationCategory(string name) : ISyndicationCategory
 {
-    public SyndicationCategory(string name)
-    {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
-    }
-
-    public string Name { get; }
+    public string Name { get; } = name ?? throw new ArgumentNullException(nameof(name));
 
     public string Label { get; set; }
 

@@ -6,21 +6,14 @@ using System;
 
 namespace Edi.SyndicationFeed.ReaderWriter;
 
-public sealed class SyndicationAttribute : ISyndicationAttribute
+public sealed class SyndicationAttribute(string name, string ns, string value) : ISyndicationAttribute
 {
     public SyndicationAttribute(string name, string value) :
         this(name, null, value)
     {
     }
 
-    public SyndicationAttribute(string name, string ns, string value)
-    {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
-        Value = value ?? throw new ArgumentNullException(nameof(value));
-        Namespace = ns;
-    }
-
-    public string Name { get; }
-    public string Namespace { get; }
-    public string Value { get; }
+    public string Name { get; } = name ?? throw new ArgumentNullException(nameof(name));
+    public string Namespace { get; } = ns;
+    public string Value { get; } = value ?? throw new ArgumentNullException(nameof(value));
 }

@@ -6,21 +6,15 @@ using System;
 
 namespace Edi.SyndicationFeed.ReaderWriter;
 
-public sealed class SyndicationImage : ISyndicationImage
+public sealed class SyndicationImage(Uri url, string relationshipType = null) : ISyndicationImage
 {
-    public SyndicationImage(Uri url, string relationshipType = null)
-    {
-        Url = url ?? throw new ArgumentNullException(nameof(url));
-        RelationshipType = relationshipType;
-    }
-
     public string Title { get; set; }
 
-    public Uri Url { get; }
+    public Uri Url { get; } = url ?? throw new ArgumentNullException(nameof(url));
 
     public ISyndicationLink Link { get; set; }
 
-    public string RelationshipType { get; set; }
+    public string RelationshipType { get; set; } = relationshipType;
 
     public string Description { get; set; }
 }
