@@ -120,17 +120,12 @@ public class AtomFormatter : ISyndicationFeedFormatter
             throw new ArgumentNullException("Uri");
         }
 
-        switch (link.RelationshipType)
+        return link.RelationshipType switch
         {
-            case AtomLinkTypes.Content:
-                return CreateFromContentLink(link);
-
-            case AtomLinkTypes.Source:
-                return CreateFromSourceLink(link);
-
-            default:
-                return CreateFromLink(link);
-        }
+            AtomLinkTypes.Content => CreateFromContentLink(link),
+            AtomLinkTypes.Source => CreateFromSourceLink(link),
+            _ => CreateFromLink(link),
+        };
     }
 
     public virtual ISyndicationContent CreateContent(ISyndicationCategory category)
