@@ -23,7 +23,7 @@ public class AtomFeedWriter : XmlFeedWriter
     }
 
     public AtomFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> attributes, ISyndicationFeedFormatter formatter) :
-        this(writer, formatter, EnsureXmlNs(attributes ?? Enumerable.Empty<ISyndicationAttribute>()))
+        this(writer, formatter, EnsureXmlNs(attributes ?? []))
     {
     }
 

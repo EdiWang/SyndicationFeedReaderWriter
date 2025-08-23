@@ -25,7 +25,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
     {
         _buffer = new StringBuilder();
         _writer = XmlUtils.CreateXmlWriter(settings?.Clone() ?? new XmlWriterSettings(),
-            EnsureAtomNs(knownAttributes ?? Enumerable.Empty<ISyndicationAttribute>()),
+            EnsureAtomNs(knownAttributes ?? []),
             _buffer);
     }
 
