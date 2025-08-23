@@ -36,27 +36,15 @@ public class RssFeedReader(XmlReader reader, ISyndicationFeedParser parser) : Xm
             return SyndicationElementType.Content;
         }
 
-        switch (elementName)
+        return elementName switch
         {
-            case RssElementNames.Item:
-                return SyndicationElementType.Item;
-
-            case RssElementNames.Link:
-                return SyndicationElementType.Link;
-
-            case RssElementNames.Category:
-                return SyndicationElementType.Category;
-
-            case RssElementNames.Author:
-            case RssElementNames.ManagingEditor:
-                return SyndicationElementType.Person;
-
-            case RssElementNames.Image:
-                return SyndicationElementType.Image;
-
-            default:
-                return SyndicationElementType.Content;
-        }
+            RssElementNames.Item => SyndicationElementType.Item,
+            RssElementNames.Link => SyndicationElementType.Link,
+            RssElementNames.Category => SyndicationElementType.Category,
+            RssElementNames.Author or RssElementNames.ManagingEditor => SyndicationElementType.Person,
+            RssElementNames.Image => SyndicationElementType.Image,
+            _ => SyndicationElementType.Content,
+        };
     }
 
     private async Task InitRead()
