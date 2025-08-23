@@ -32,13 +32,7 @@ public class AtomFeedReader(XmlReader reader, ISyndicationFeedParser parser) : X
 
     public virtual async Task<IAtomEntry> ReadEntry()
     {
-        IAtomEntry item = await base.ReadItem() as IAtomEntry;
-
-        if (item == null)
-        {
-            throw new FormatException("Invalid Atom entry");
-        }
-
+        IAtomEntry item = await base.ReadItem() as IAtomEntry ?? throw new FormatException("Invalid Atom entry");
         return item;
     }
 

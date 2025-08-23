@@ -52,13 +52,7 @@ public abstract class XmlFeedWriter(XmlWriter writer, ISyndicationFeedFormatter 
             throw new ArgumentNullException(nameof(name));
         }
 
-        string valueString = Formatter.FormatValue(value);
-
-        if (valueString == null)
-        {
-            throw new FormatException(nameof(value));
-        }
-
+        string valueString = Formatter.FormatValue(value) ?? throw new FormatException(nameof(value));
         return WriteRaw(Formatter.Format(new SyndicationContent(name, valueString)));
     }
 
