@@ -56,9 +56,9 @@ public class AtomFeedWriter : XmlFeedWriter
 
     public virtual Task WriteUpdated(DateTimeOffset dt)
     {
-        if (dt == default(DateTimeOffset))
+        if (dt == default)
         {
-            throw new ArgumentException(nameof(dt));
+            throw new ArgumentException(null, nameof(dt));
         }
 
         return WriteValue(AtomElementNames.Updated, dt);
