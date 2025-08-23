@@ -11,22 +11,15 @@ using System.Xml;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Rss;
 
-public class RssFeedWriter : XmlFeedWriter
+public class RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> attributes, ISyndicationFeedFormatter formatter) : XmlFeedWriter(writer, formatter ?? new RssFormatter(attributes, writer.Settings))
 {
-    private readonly XmlWriter _writer;
+    private readonly XmlWriter _writer = writer;
     private bool _feedStarted;
-    private readonly IEnumerable<ISyndicationAttribute> _attributes;
+    private readonly IEnumerable<ISyndicationAttribute> _attributes = attributes;
 
     public RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> attributes = null)
         : this(writer, attributes, null)
     {
-    }
-
-    public RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> attributes, ISyndicationFeedFormatter formatter) :
-        base(writer, formatter ?? new RssFormatter(attributes, writer.Settings))
-    {
-        _writer = writer;
-        _attributes = attributes;
     }
 
     public virtual Task WriteTitle(string value)
@@ -71,7 +64,7 @@ public class RssFeedWriter : XmlFeedWriter
 
     public virtual Task WritePubDate(DateTimeOffset dt)
     {
-        if (dt == default(DateTimeOffset))
+        if (dt == default)
         {
             throw new ArgumentException(nameof(dt));
         }
@@ -81,7 +74,7 @@ public class RssFeedWriter : XmlFeedWriter
 
     public virtual Task WriteLastBuildDate(DateTimeOffset dt)
     {
-        if (dt == default(DateTimeOffset))
+        if (dt == default)
         {
             throw new ArgumentException(nameof(dt));
         }
@@ -134,7 +127,7 @@ public class RssFeedWriter : XmlFeedWriter
 
     public virtual Task WriteTimeToLive(TimeSpan ttl)
     {
-        if (ttl == default(TimeSpan))
+        if (ttl == default)
         {
             throw new ArgumentException(nameof(ttl));
         }

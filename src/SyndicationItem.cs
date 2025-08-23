@@ -16,9 +16,9 @@ public class SyndicationItem : ISyndicationItem
 
     public SyndicationItem()
     {
-        _categories = new List<ISyndicationCategory>();
-        _contributors = new List<ISyndicationPerson>();
-        _links = new List<ISyndicationLink>();
+        _categories = [];
+        _contributors = [];
+        _links = [];
     }
 
     public SyndicationItem(ISyndicationItem item)

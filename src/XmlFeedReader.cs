@@ -9,22 +9,14 @@ using System.Xml;
 
 namespace Edi.SyndicationFeed.ReaderWriter;
 
-public abstract class XmlFeedReader : ISyndicationFeedReader
+public abstract class XmlFeedReader(XmlReader reader, ISyndicationFeedParser parser) : ISyndicationFeedReader
 {
-    private readonly XmlReader _reader;
+    private readonly XmlReader _reader = reader ?? throw new ArgumentNullException(nameof(reader));
     private bool _currentSet;
 
-    protected XmlFeedReader(XmlReader reader, ISyndicationFeedParser parser)
-    {
-        _reader = reader ?? throw new ArgumentNullException(nameof(reader));
-        Parser = parser ?? throw new ArgumentNullException(nameof(parser));
+    public ISyndicationFeedParser Parser { get; } = parser ?? throw new ArgumentNullException(nameof(parser));
 
-        ElementType = SyndicationElementType.None;
-    }
-
-    public ISyndicationFeedParser Parser { get; }
-
-    public SyndicationElementType ElementType { get; private set; }
+    public SyndicationElementType ElementType { get; private set; } = SyndicationElementType.None;
 
     public string ElementName { get; private set; }
 

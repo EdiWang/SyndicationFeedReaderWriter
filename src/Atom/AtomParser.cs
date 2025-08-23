@@ -102,13 +102,7 @@ public class AtomParser : ISyndicationFeedParser
             throw new ArgumentNullException(nameof(content));
         }
 
-        string term = content.Attributes.GetAtom(AtomConstants.Term);
-
-        if (term == null)
-        {
-            throw new FormatException("Invalid Atom category, requires Term attribute");
-        }
-
+        string term = content.Attributes.GetAtom(AtomConstants.Term) ?? throw new FormatException("Invalid Atom category, requires Term attribute");
         return new SyndicationCategory(term)
         {
             Scheme = content.Attributes.GetAtom(AtomConstants.Scheme),

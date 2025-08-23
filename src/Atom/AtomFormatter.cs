@@ -25,7 +25,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
     {
         _buffer = new StringBuilder();
         _writer = XmlUtils.CreateXmlWriter(settings?.Clone() ?? new XmlWriterSettings(),
-            EnsureAtomNs(knownAttributes ?? Enumerable.Empty<ISyndicationAttribute>()),
+            EnsureAtomNs(knownAttributes ?? []),
             _buffer);
     }
 
@@ -120,17 +120,12 @@ public class AtomFormatter : ISyndicationFeedFormatter
             throw new ArgumentNullException("Uri");
         }
 
-        switch (link.RelationshipType)
+        return link.RelationshipType switch
         {
-            case AtomLinkTypes.Content:
-                return CreateFromContentLink(link);
-
-            case AtomLinkTypes.Source:
-                return CreateFromSourceLink(link);
-
-            default:
-                return CreateFromLink(link);
-        }
+            AtomLinkTypes.Content => CreateFromContentLink(link),
+            AtomLinkTypes.Source => CreateFromSourceLink(link),
+            _ => CreateFromLink(link),
+        };
     }
 
     public virtual ISyndicationContent CreateContent(ISyndicationCategory category)
@@ -244,7 +239,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
             throw new ArgumentNullException("Title");
         }
 
-        if (item.LastUpdated == default(DateTimeOffset))
+        if (item.LastUpdated == default)
         {
             throw new ArgumentException("LastUpdated");
         }
@@ -265,7 +260,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
 
         //
         // published
-        if (item.Published != default(DateTimeOffset))
+        if (item.Published != default)
         {
             result.AddField(new SyndicationContent(AtomElementNames.Published, FormatValue(item.Published)));
         }
@@ -472,7 +467,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
 
         //
         // updated
-        if (link.LastUpdated != default(DateTimeOffset))
+        if (link.LastUpdated != default)
         {
             result.AddField(new SyndicationContent(AtomElementNames.Updated, FormatValue(link.LastUpdated)));
         }

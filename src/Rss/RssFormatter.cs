@@ -123,20 +123,13 @@ public class RssFormatter : ISyndicationFeedFormatter
             throw new ArgumentNullException("Invalid link uri");
         }
 
-        switch (link.RelationshipType)
+        return link.RelationshipType switch
         {
-            case RssElementNames.Enclosure:
-                return CreateEnclosureContent(link);
-
-            case RssElementNames.Comments:
-                return CreateCommentsContent(link);
-
-            case RssElementNames.Source:
-                return CreateSourceContent(link);
-
-            default:
-                return CreateLinkContent(link);
-        }
+            RssElementNames.Enclosure => CreateEnclosureContent(link),
+            RssElementNames.Comments => CreateCommentsContent(link),
+            RssElementNames.Source => CreateSourceContent(link),
+            _ => CreateLinkContent(link),
+        };
     }
 
     public virtual ISyndicationContent CreateContent(ISyndicationCategory category)

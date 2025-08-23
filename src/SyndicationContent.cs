@@ -30,8 +30,8 @@ public class SyndicationContent : ISyndicationContent
         Value = value;
         Namespace = ns;
 
-        _attributes = new List<ISyndicationAttribute>();
-        _children = new List<ISyndicationContent>();
+        _attributes = [];
+        _children = [];
     }
 
     public SyndicationContent(ISyndicationContent content)

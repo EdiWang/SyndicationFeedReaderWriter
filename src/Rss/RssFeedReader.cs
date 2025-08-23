@@ -8,20 +8,14 @@ using System.Xml;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Rss;
 
-public class RssFeedReader : XmlFeedReader
+public class RssFeedReader(XmlReader reader, ISyndicationFeedParser parser) : XmlFeedReader(reader, parser)
 {
-    private readonly XmlReader _reader;
+    private readonly XmlReader _reader = reader;
     private bool _knownFeed;
 
     public RssFeedReader(XmlReader reader)
         : this(reader, new RssParser())
     {
-    }
-
-    public RssFeedReader(XmlReader reader, ISyndicationFeedParser parser)
-        : base(reader, parser)
-    {
-        _reader = reader;
     }
 
     public override async Task<bool> Read()
@@ -42,27 +36,15 @@ public class RssFeedReader : XmlFeedReader
             return SyndicationElementType.Content;
         }
 
-        switch (elementName)
+        return elementName switch
         {
-            case RssElementNames.Item:
-                return SyndicationElementType.Item;
-
-            case RssElementNames.Link:
-                return SyndicationElementType.Link;
-
-            case RssElementNames.Category:
-                return SyndicationElementType.Category;
-
-            case RssElementNames.Author:
-            case RssElementNames.ManagingEditor:
-                return SyndicationElementType.Person;
-
-            case RssElementNames.Image:
-                return SyndicationElementType.Image;
-
-            default:
-                return SyndicationElementType.Content;
-        }
+            RssElementNames.Item => SyndicationElementType.Item,
+            RssElementNames.Link => SyndicationElementType.Link,
+            RssElementNames.Category => SyndicationElementType.Category,
+            RssElementNames.Author or RssElementNames.ManagingEditor => SyndicationElementType.Person,
+            RssElementNames.Image => SyndicationElementType.Image,
+            _ => SyndicationElementType.Content,
+        };
     }
 
     private async Task InitRead()
