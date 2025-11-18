@@ -11,13 +11,13 @@
 
 ### Supports:
 * .NET 8.0
-* .NET 9.0
+* .NET 10.0
 
 ### Building:
-* The solution will build in Visual Studio 2022 after cloning.
+* The solution will build in Visual Studio 2026 after cloning.
 
 ### Running Tests:
-* Open the solution in Visual Studio 2022.
+* Open the solution in Visual Studio 2026.
 * Build the Tests project.
 * Open the Test Explorer and click "Run All" or run each test individually.
 
