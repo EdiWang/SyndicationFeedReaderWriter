@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="examples/Edi.SyndicationFeed.ReaderWriter.Examples.csproj" />
+  <Project Path="src/Edi.SyndicationFeed.ReaderWriter.csproj" />
+  <Project Path="tests/Edi.SyndicationFeed.ReaderWriter.Tests.csproj" />
+</Solution>
