@@ -20,10 +20,7 @@ public class SyndicationContent : ISyndicationContent
 
     public SyndicationContent(string name, string ns, string value)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
 
         Name = name;
@@ -36,10 +33,7 @@ public class SyndicationContent : ISyndicationContent
 
     public SyndicationContent(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         Name = content.Name;
         Namespace = content.Namespace;
@@ -56,28 +50,13 @@ public class SyndicationContent : ISyndicationContent
 
     public string Value { get; set; }
 
-    public IEnumerable<ISyndicationAttribute> Attributes
-    {
-        get
-        {
-            return _attributes;
-        }
-    }
+    public IEnumerable<ISyndicationAttribute> Attributes => _attributes;
 
-    public IEnumerable<ISyndicationContent> Fields
-    {
-        get
-        {
-            return _children;
-        }
-    }
+    public IEnumerable<ISyndicationContent> Fields => _children;
 
     public void AddAttribute(ISyndicationAttribute attribute)
     {
-        if (attribute == null)
-        {
-            throw new ArgumentNullException(nameof(attribute));
-        }
+        ArgumentNullException.ThrowIfNull(attribute);
 
         if (_attributes.IsReadOnly)
         {
@@ -89,10 +68,7 @@ public class SyndicationContent : ISyndicationContent
 
     public void AddField(ISyndicationContent field)
     {
-        if (field == null)
-        {
-            throw new ArgumentNullException(nameof(field));
-        }
+        ArgumentNullException.ThrowIfNull(field);
 
         if (_children.IsReadOnly)
         {

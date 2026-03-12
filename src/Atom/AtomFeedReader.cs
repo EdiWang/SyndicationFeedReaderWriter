@@ -43,28 +43,15 @@ public class AtomFeedReader(XmlReader reader, ISyndicationFeedParser parser) : X
             return SyndicationElementType.Content;
         }
 
-        switch (elementName)
+        return elementName switch
         {
-            case AtomElementNames.Entry:
-                return SyndicationElementType.Item;
-
-            case AtomElementNames.Link:
-                return SyndicationElementType.Link;
-
-            case AtomElementNames.Category:
-                return SyndicationElementType.Category;
-
-            case AtomElementNames.Logo:
-            case AtomElementNames.Icon:
-                return SyndicationElementType.Image;
-
-            case AtomContributorTypes.Author:
-            case AtomContributorTypes.Contributor:
-                return SyndicationElementType.Person;
-
-            default:
-                return SyndicationElementType.Content;
-        }
+            AtomElementNames.Entry => SyndicationElementType.Item,
+            AtomElementNames.Link => SyndicationElementType.Link,
+            AtomElementNames.Category => SyndicationElementType.Category,
+            AtomElementNames.Logo or AtomElementNames.Icon => SyndicationElementType.Image,
+            AtomContributorTypes.Author or AtomContributorTypes.Contributor => SyndicationElementType.Person,
+            _ => SyndicationElementType.Content,
+        };
     }
 
     private async Task InitRead()

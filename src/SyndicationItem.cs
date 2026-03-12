@@ -23,10 +23,7 @@ public class SyndicationItem : ISyndicationItem
 
     public SyndicationItem(ISyndicationItem item)
     {
-        if (item == null)
-        {
-            throw new ArgumentNullException(nameof(item));
-        }
+        ArgumentNullException.ThrowIfNull(item);
 
         Id = item.Id;
         Title = item.Title;
@@ -46,29 +43,11 @@ public class SyndicationItem : ISyndicationItem
 
     public string Description { get; set; }
 
-    public IEnumerable<ISyndicationCategory> Categories
-    {
-        get
-        {
-            return _categories;
-        }
-    }
+    public IEnumerable<ISyndicationCategory> Categories => _categories;
 
-    public IEnumerable<ISyndicationPerson> Contributors
-    {
-        get
-        {
-            return _contributors;
-        }
-    }
+    public IEnumerable<ISyndicationPerson> Contributors => _contributors;
 
-    public IEnumerable<ISyndicationLink> Links
-    {
-        get
-        {
-            return _links;
-        }
-    }
+    public IEnumerable<ISyndicationLink> Links => _links;
 
     public DateTimeOffset LastUpdated { get; set; }
 
@@ -76,10 +55,7 @@ public class SyndicationItem : ISyndicationItem
 
     public void AddCategory(ISyndicationCategory category)
     {
-        if (category == null)
-        {
-            throw new ArgumentNullException(nameof(category));
-        }
+        ArgumentNullException.ThrowIfNull(category);
 
         if (_categories.IsReadOnly)
         {
@@ -91,10 +67,7 @@ public class SyndicationItem : ISyndicationItem
 
     public void AddContributor(ISyndicationPerson person)
     {
-        if (person == null)
-        {
-            throw new ArgumentNullException(nameof(person));
-        }
+        ArgumentNullException.ThrowIfNull(person);
 
         if (_contributors.IsReadOnly)
         {
@@ -106,10 +79,7 @@ public class SyndicationItem : ISyndicationItem
 
     public void AddLink(ISyndicationLink link)
     {
-        if (link == null)
-        {
-            throw new ArgumentNullException(nameof(link));
-        }
+        ArgumentNullException.ThrowIfNull(link);
 
         if (_links.IsReadOnly)
         {

@@ -33,10 +33,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
 
     public string Format(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         try
         {
@@ -110,10 +107,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
 
     public virtual ISyndicationContent CreateContent(ISyndicationLink link)
     {
-        if (link == null)
-        {
-            throw new ArgumentNullException(nameof(link));
-        }
+        ArgumentNullException.ThrowIfNull(link);
 
         if (link.Uri == null)
         {
@@ -130,10 +124,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
 
     public virtual ISyndicationContent CreateContent(ISyndicationCategory category)
     {
-        if (category == null)
-        {
-            throw new ArgumentNullException(nameof(category));
-        }
+        ArgumentNullException.ThrowIfNull(category);
 
         if (string.IsNullOrEmpty(category.Name))
         {
@@ -165,10 +156,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
 
     public virtual ISyndicationContent CreateContent(ISyndicationPerson person)
     {
-        if (person == null)
-        {
-            throw new ArgumentNullException(nameof(person));
-        }
+        ArgumentNullException.ThrowIfNull(person);
 
         if (string.IsNullOrEmpty(person.Name))
         {
@@ -208,10 +196,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
 
     public virtual ISyndicationContent CreateContent(ISyndicationImage image)
     {
-        if (image == null)
-        {
-            throw new ArgumentNullException(nameof(image));
-        }
+        ArgumentNullException.ThrowIfNull(image);
 
         if (image.Url == null)
         {
@@ -224,10 +209,7 @@ public class AtomFormatter : ISyndicationFeedFormatter
 
     public virtual ISyndicationContent CreateContent(ISyndicationItem item)
     {
-        if (item == null)
-        {
-            throw new ArgumentNullException(nameof(item));
-        }
+        ArgumentNullException.ThrowIfNull(item);
 
         if (string.IsNullOrEmpty(item.Id))
         {

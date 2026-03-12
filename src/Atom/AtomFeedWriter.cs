@@ -46,10 +46,7 @@ public class AtomFeedWriter : XmlFeedWriter
 
     public virtual Task WriteId(string value)
     {
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
         return WriteValue(AtomElementNames.Id, value);
     }
@@ -71,10 +68,7 @@ public class AtomFeedWriter : XmlFeedWriter
 
     public virtual Task WriteGenerator(string value, string uri, string version)
     {
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
         var generator = new SyndicationContent(AtomElementNames.Generator, value);
 
@@ -93,15 +87,8 @@ public class AtomFeedWriter : XmlFeedWriter
 
     public virtual Task WriteText(string name, string value, string type)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
-
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(name);
+        ArgumentNullException.ThrowIfNull(value);
 
         var content = new SyndicationContent(name, value);
 

@@ -30,10 +30,7 @@ public class RssFormatter : ISyndicationFeedFormatter
 
     public string Format(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         try
         {
@@ -113,10 +110,7 @@ public class RssFormatter : ISyndicationFeedFormatter
 
     public virtual ISyndicationContent CreateContent(ISyndicationLink link)
     {
-        if (link == null)
-        {
-            throw new ArgumentNullException(nameof(link));
-        }
+        ArgumentNullException.ThrowIfNull(link);
 
         if (link.Uri == null)
         {
@@ -134,10 +128,7 @@ public class RssFormatter : ISyndicationFeedFormatter
 
     public virtual ISyndicationContent CreateContent(ISyndicationCategory category)
     {
-        if (category == null)
-        {
-            throw new ArgumentNullException(nameof(category));
-        }
+        ArgumentNullException.ThrowIfNull(category);
 
         if (string.IsNullOrEmpty(category.Name))
         {
@@ -156,10 +147,7 @@ public class RssFormatter : ISyndicationFeedFormatter
 
     public virtual ISyndicationContent CreateContent(ISyndicationPerson person)
     {
-        if (person == null)
-        {
-            throw new ArgumentNullException(nameof(person));
-        }
+        ArgumentNullException.ThrowIfNull(person);
 
         //
         // RSS requires Email
@@ -179,10 +167,7 @@ public class RssFormatter : ISyndicationFeedFormatter
 
     public virtual ISyndicationContent CreateContent(ISyndicationImage image)
     {
-        if (image == null)
-        {
-            throw new ArgumentNullException(nameof(image));
-        }
+        ArgumentNullException.ThrowIfNull(image);
 
         // Required URL - Title - Link
         if (string.IsNullOrEmpty(image.Title))
@@ -219,10 +204,7 @@ public class RssFormatter : ISyndicationFeedFormatter
 
     public virtual ISyndicationContent CreateContent(ISyndicationItem item)
     {
-        if (item == null)
-        {
-            throw new ArgumentNullException(nameof(item));
-        }
+        ArgumentNullException.ThrowIfNull(item);
 
         // Spec requires to have at least one title or description
         if (string.IsNullOrEmpty(item.Title) && string.IsNullOrEmpty(item.Description))
