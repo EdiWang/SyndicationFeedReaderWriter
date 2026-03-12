@@ -54,14 +54,17 @@ static class Converter
         }
 
         //
-        // TODO: being added in netstandard 2.0
-        //if (type.GetTypeInfo().IsEnum)
-        //{
-        //    if (Enum.TryParse(typeof(T), value, true, out T o)) {
-        //        result = (T)(object)o;
-        //        return true;
-        //    }
-        //}
+        // Enum
+        if (type.IsEnum)
+        {
+            if (Enum.TryParse(type, value, true, out object o))
+            {
+                result = (T)o;
+                return true;
+            }
+
+            return false;
+        }
 
         //
         // Uri

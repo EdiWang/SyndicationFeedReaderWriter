@@ -77,10 +77,7 @@ public class AtomParser : ISyndicationFeedParser
 
     public ISyndicationContent ParseContent(string value)
     {
-        if (string.IsNullOrEmpty(value))
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(value);
 
         using (XmlReader reader = CreateXmlReader(value))
         {
@@ -97,10 +94,7 @@ public class AtomParser : ISyndicationFeedParser
 
     public virtual ISyndicationCategory CreateCategory(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         string term = content.Attributes.GetAtom(AtomConstants.Term) ?? throw new FormatException("Invalid Atom category, requires Term attribute");
         return new SyndicationCategory(term)
@@ -112,10 +106,7 @@ public class AtomParser : ISyndicationFeedParser
 
     public virtual ISyndicationImage CreateImage(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         if (!TryParseValue(content.Value, out Uri uri))
         {
@@ -127,10 +118,7 @@ public class AtomParser : ISyndicationFeedParser
 
     public virtual ISyndicationLink CreateLink(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         //
         // title
@@ -178,10 +166,7 @@ public class AtomParser : ISyndicationFeedParser
 
     public virtual ISyndicationPerson CreatePerson(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         string name = null;
         string email = null;
@@ -229,10 +214,7 @@ public class AtomParser : ISyndicationFeedParser
 
     public virtual IAtomEntry CreateEntry(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         var item = new AtomEntry();
 
@@ -343,14 +325,11 @@ public class AtomParser : ISyndicationFeedParser
 
     public virtual ISyndicationLink CreateSource(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         Uri url = null;
         string title = null;
-        DateTimeOffset lastUpdated;
+        DateTimeOffset lastUpdated = default;
 
         foreach (var field in content.Fields)
         {

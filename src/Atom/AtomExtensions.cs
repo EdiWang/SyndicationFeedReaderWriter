@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Edi.SyndicationFeed.ReaderWriter.Atom;
 
-static class AtomAttributeExtentions
+static class AtomAttributeExtensions
 {
     public static string GetAtom(this IEnumerable<ISyndicationAttribute> attributes, string name)
     {
@@ -20,7 +20,7 @@ static class AtomAttributeExtentions
     }
 }
 
-static class AtomContentExtentions
+static class AtomContentExtensions
 {
     public static bool IsAtom(this ISyndicationContent content, string name)
     {

@@ -24,40 +24,28 @@ public class RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> 
 
     public virtual Task WriteTitle(string value)
     {
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
         return WriteValue(RssElementNames.Title, value);
     }
 
     public virtual Task WriteDescription(string value)
     {
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
         return WriteValue(RssElementNames.Description, value);
     }
 
     public virtual Task WriteLanguage(CultureInfo culture)
     {
-        if (culture == null)
-        {
-            throw new ArgumentNullException(nameof(culture));
-        }
+        ArgumentNullException.ThrowIfNull(culture);
 
         return WriteValue(RssElementNames.Language, culture.Name);
     }
 
     public virtual Task WriteCopyright(string value)
     {
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
         return WriteValue(RssElementNames.Copyright, value);
     }
@@ -84,10 +72,7 @@ public class RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> 
 
     public virtual Task WriteGenerator(string value)
     {
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
         return WriteValue(RssElementNames.Generator, value);
     }
@@ -99,20 +84,14 @@ public class RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> 
 
     public virtual Task WriteCloud(Uri uri, string registerProcedure, string protocol)
     {
-        if (uri == null)
-        {
-            throw new ArgumentNullException(nameof(uri));
-        }
+        ArgumentNullException.ThrowIfNull(uri);
 
         if (!uri.IsAbsoluteUri)
         {
             throw new ArgumentException("Absolute uri required");
         }
 
-        if (string.IsNullOrEmpty(registerProcedure))
-        {
-            throw new ArgumentNullException(nameof(registerProcedure));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(registerProcedure);
 
         var cloud = new SyndicationContent(RssElementNames.Cloud);
 
@@ -137,10 +116,7 @@ public class RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> 
 
     public virtual Task WriteSkipHours(IEnumerable<byte> hours)
     {
-        if (hours == null)
-        {
-            throw new ArgumentNullException(nameof(hours));
-        }
+        ArgumentNullException.ThrowIfNull(hours);
 
         var skipHours = new SyndicationContent(RssElementNames.SkipHours);
 
@@ -159,10 +135,7 @@ public class RssFeedWriter(XmlWriter writer, IEnumerable<ISyndicationAttribute> 
 
     public virtual Task WriteSkipDays(IEnumerable<DayOfWeek> days)
     {
-        if (days == null)
-        {
-            throw new ArgumentNullException(nameof(days));
-        }
+        ArgumentNullException.ThrowIfNull(days);
 
         var skipDays = new SyndicationContent(RssElementNames.SkipDays);
 

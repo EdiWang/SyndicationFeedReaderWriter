@@ -80,10 +80,7 @@ public class RssParser : ISyndicationFeedParser
 
     public ISyndicationContent ParseContent(string value)
     {
-        if (string.IsNullOrEmpty(value))
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(value);
 
         using (XmlReader reader = XmlUtils.CreateXmlReader(value))
         {
@@ -100,10 +97,7 @@ public class RssParser : ISyndicationFeedParser
 
     public virtual ISyndicationItem CreateItem(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         var item = new SyndicationItem();
 
@@ -197,10 +191,7 @@ public class RssParser : ISyndicationFeedParser
 
     public virtual ISyndicationLink CreateLink(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         //
         // Title
@@ -251,10 +242,7 @@ public class RssParser : ISyndicationFeedParser
 
     public virtual ISyndicationPerson CreatePerson(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         if (string.IsNullOrEmpty(content.Value))
         {
@@ -289,10 +277,7 @@ public class RssParser : ISyndicationFeedParser
 
     public virtual ISyndicationImage CreateImage(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         string title = null;
         string description = null;
@@ -355,10 +340,7 @@ public class RssParser : ISyndicationFeedParser
 
     public virtual ISyndicationCategory CreateCategory(ISyndicationContent content)
     {
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(content);
 
         if (content.Value == null)
         {
@@ -440,7 +422,7 @@ public class RssParser : ISyndicationFeedParser
     }
 }
 
-static class RssAttributeExtentions
+static class RssAttributeExtensions
 {
     public static string GetRss(this IEnumerable<ISyndicationAttribute> attributes, string name)
     {

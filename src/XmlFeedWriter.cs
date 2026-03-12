@@ -47,10 +47,7 @@ public abstract class XmlFeedWriter(XmlWriter writer, ISyndicationFeedFormatter 
 
     public virtual Task WriteValue<T>(string name, T value)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
         string valueString = Formatter.FormatValue(value) ?? throw new FormatException(nameof(value));
         return WriteRaw(Formatter.Format(new SyndicationContent(name, valueString)));
